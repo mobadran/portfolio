@@ -2,61 +2,76 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Terminal } from './Terminal';
+import { initVFS, Directory } from '@/lib/vfs';
 
 export default function Main() {
   const [terminalIds, setTerminalIds] = useState<number[]>([0]);
-  const nextId = useRef(1); // Always unique id generator
+  const nextId = useRef(1);
+
+  // Global VFS state
+  const [vfs, setVfs] = useState<Directory | null>(null);
+
+  useEffect(() => {
+    initVFS().then(setVfs);
+  }, []);
 
   function useAltTListener(onAltT: () => void) {
     useEffect(() => {
       function handleKeyDown(event: KeyboardEvent) {
         if (event.altKey && event.key.toLowerCase() === 't') {
-          event.preventDefault(); // prevent browser default (optional)
+          event.preventDefault();
           onAltT();
         }
       }
-
       window.addEventListener('keydown', handleKeyDown);
-
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-      };
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onAltT]);
   }
 
   function spawnTerminal() {
     setTerminalIds((prev) => {
-      // Prevent duplicate ids
-      if (prev.includes(nextId.current)) {
-        // Optionally log for debugging
-        console.warn('Duplicate terminal id detected:', nextId.current, prev);
-        return prev;
-      }
+      if (prev.includes(nextId.current)) return prev;
       return [...prev, nextId.current];
     });
+    console.log(`Terminal ${nextId.current} spawned`);
+    console.log('terminalIds:', terminalIds);
     nextId.current += 1;
   }
 
-  // Remove a terminal by its id
   const destroyTerminal = useCallback((id: number) => {
     setTerminalIds((prev) => prev.filter((tid) => tid !== id));
-    focusNextElement(); // Focus next element after terminal is removed
+    console.log(`Terminal ${id} destroyed`);
+    // focusNextElement(id);
   }, []);
 
-  function focusNextElement() {
-    const allInputs = document.querySelectorAll('input');
-    if (allInputs.length > 0) {
-      const nextInput = allInputs[Math.floor(Math.random() * allInputs.length)] as HTMLInputElement;
-      nextInput.focus();
-    }
-  }
+  // function focusNextElement(id: number) {
+  //   // Focus the next terminal or input element
+  //   console.log('terminalIds:', terminalIds);
+  //   for (const i of terminalIds) {
+  //     console.log('Checking terminal:', i);
+  //     if (i > id) {
+  //       const nextTerminal = document.querySelector(`#terminal-${i}`) as HTMLDivElement;
+  //       console.log('Focusing next terminal:', nextTerminal);
+  //       if (nextTerminal) {
+  //         // nextTerminal.focus();
+  //         nextTerminal.click();
+  //         return;
+  //       }
+  //     }
+  //   }
+  //   // const allInputs = document.querySelectorAll('input');
+  //   // if (allInputs.length > 0) {
+  //   //   const nextInput = allInputs[Math.floor(Math.random() * allInputs.length)] as HTMLInputElement;
+  //   //   nextInput.focus();
+  //   // }
+  // }
 
   useAltTListener(spawnTerminal);
 
   return (
     <main className='grow p-4 overflow-hidden gap-2 grid auto-cols-2 auto-rows-2'>
       {terminalIds.map((id) => (
-        <Terminal key={id} onDestroy={() => destroyTerminal(id)} />
+        <Terminal key={id} id={id} vfs={vfs} setVfs={setVfs} onDestroy={() => destroyTerminal(id)} />
       ))}
     </main>
   );
