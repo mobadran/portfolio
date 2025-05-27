@@ -1,0 +1,68 @@
+'use client';
+
+import { useEffect, useState, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { Terminal } from './Terminal';
+import { initVFS } from '@/lib/vfs';
+import type { Directory } from '@/types/vfs';
+import Modal from './Modal';
+
+const TerminalGrid = forwardRef((props, ref) => {
+  const [terminalIds, setTerminalIds] = useState<number[]>([0]);
+  const [warningShown, setWarningShown] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
+  const [vfs, setVfs] = useState<Directory | null>(null);
+  const [history, setHistory] = useLocalStorage<string[]>('history', []);
+  const nextId = useRef(1);
+
+  function showWarning(message: string) {
+    setWarningMessage(message);
+    setWarningShown(true);
+  }
+
+  function spawnTerminal() {
+    if (terminalIds.length >= 4) {
+      console.log(terminalIds);
+      showWarning('Maximum number of terminals reached (4)');
+      return;
+    }
+    setTerminalIds((prev) => {
+      if (prev.includes(nextId.current)) return prev;
+      return [...prev, nextId.current];
+    });
+    nextId.current += 1;
+  }
+
+  const destroyTerminal = useCallback(
+    (id: number) => {
+      if (terminalIds.length <= 1) {
+        showWarning('Cannot destroy the last terminal. Use Alt+S to go to home.');
+        return;
+      }
+      console.log('Previous terminal IDs:', terminalIds);
+      console.log('Destroying terminal with ID:', id);
+      setTerminalIds((prev) => prev.filter((tid) => tid !== id));
+    },
+    [terminalIds]
+  );
+
+  useEffect(() => {
+    initVFS().then(setVfs);
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    spawnTerminal,
+  }));
+
+  return (
+    <main className="auto-cols-2 auto-rows-2 grid grow gap-2 overflow-hidden p-4">
+      {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
+      {terminalIds.map((id) => (
+        <Terminal key={id} id={id} vfs={vfs} setVfs={setVfs} onDestroy={() => destroyTerminal(id)} history={history} setHistory={setHistory} />
+      ))}
+    </main>
+  );
+});
+
+TerminalGrid.displayName = 'TerminalGrid';
+export default TerminalGrid;

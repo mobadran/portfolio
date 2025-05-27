@@ -1,5 +1,33 @@
 @import 'tailwindcss';
 
+@keyframes modal-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes overlay-fade-in {
+  0% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.animate-modal-in {
+  animation: modal-in 0.2s ease-out;
+}
+
+.animate-overlay-fade-in {
+  animation: overlay-fade-in 0.2s ease-out forwards;
+}
+
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -28,7 +56,9 @@ body,
 }
 
 main {
-  height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14));
+  height: calc(
+    100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14)
+  );
 
   /* Terminal Grid */
   display: grid;

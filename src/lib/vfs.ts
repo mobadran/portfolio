@@ -1,9 +1,4 @@
-import type { ReactNode } from 'react';
-
-export type File = { type: 'file'; content: string };
-export type Directory = { type: 'dir'; children: Record<string, FileOrDir> };
-export type FileOrDir = File | Directory;
-
+import type { Directory, FileOrDir, lsOutput } from '@/types/vfs';
 // Fetch and return the initial VFS (Directory)
 export async function initVFS(): Promise<Directory> {
   if (typeof window === 'undefined') throw new Error('Not in browser');
@@ -59,15 +54,21 @@ export function cd(vfs: Directory | null, currentPath: string[], setCurrentPath:
 }
 
 // List directory contents
-export function ls(vfs: Directory | null, currentPath: string[]): ReactNode {
-  const dir = getCurrentDir(vfs, currentPath);
-  if (!dir) return <p>Invalid directory.</p>;
-  const formatted_children = Object.entries(dir.children).map(([name, node]) => (
-    <span key={name} className={node.type === 'dir' ? 'text-blue-400' : ''}>
-      {name}&nbsp;&nbsp;
-    </span>
-  ));
-  return <p>{formatted_children}</p>;
+
+export function ls(vfs: Directory | null, currentPath: string[], path?: string): lsOutput | null {
+  let dir: Directory | null;
+  if (path) {
+    const resolvedPath = resolvePath(currentPath, path);
+    dir = getCurrentDir(vfs, resolvedPath);
+  } else {
+    dir = getCurrentDir(vfs, currentPath);
+  }
+  if (!dir) return null;
+  const children = Object.entries(dir.children).map(([name, node]) => ({
+    content: name,
+    type: node.type,
+  }));
+  return children;
 }
 
 // Print working directory
@@ -75,7 +76,6 @@ export function pwd(currentPath: string[]): string {
   return currentPath.join('/').replace('//', '/').replace('/~', '~');
 }
 
-// Make directory: clones VFS, updates, and calls setVfs
 export function mkdir(vfs: Directory | null, setVfs: (v: Directory) => void, currentPath: string[], name: string): string {
   if (!vfs) return 'mkdir: current directory not found';
   const dir = getCurrentDir(vfs, currentPath);
@@ -93,7 +93,6 @@ export function mkdir(vfs: Directory | null, setVfs: (v: Directory) => void, cur
   return `mkdir: created directory '${name}'`;
 }
 
-// Create file: clones VFS, updates, and calls setVfs
 export function touch(vfs: Directory | null, setVfs: (v: Directory) => void, currentPath: string[], name: string): string {
   if (!vfs) return 'touch: current directory not found';
   const dir = getCurrentDir(vfs, currentPath);
