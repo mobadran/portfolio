@@ -1,94 +1,75 @@
 'use client';
-import { cat, cd, ls, mkdir, pwd, Directory, touch } from '@/lib/vfs';
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { getCommands } from '@/lib/commands';
+import { pwd } from '@/lib/vfs';
 import type { ReactNode } from 'react';
+import type { CommandBlockProps, TerminalProps } from '@/types/terminal';
 
-type CommandBlockProps = {
-  prompt: ReactNode;
-  command: string;
-  output: ReactNode;
-};
+// const initialCompletionState: CompletionState = {
+//   baseWord: '',
+//   matches: [],
+//   index: 0,
+// };
 
-type TerminalProps = {
-  vfs: Directory | null;
-  id: number;
-  setVfs: (v: Directory) => void;
-  onDestroy: () => void;
-};
+// function completionReducer(state: CompletionState, action: Action): CompletionState {
+//   switch (action.type) {
+//     case 'START_CYCLE':
+//       action.function(action.matches[state.index]);
+//       return {
+//         ...state,
+//         baseWord: action.baseWord,
+//         matches: action.matches,
+//         index: 1,
+//       };
+//     case 'NEXT_MATCH':
+//       if (state.index >= state.matches.length) {
+//         action.function(state.baseWord); // Reset to base word if no matches left
+//         return { ...state, index: 0 };
+//       }
+//       action.function(state.matches[state.index]);
+//       return {
+//         ...state,
+//         index: state.index + 1,
+//       };
+//     default:
+//       return state;
+//   }
+// }
 
-export function Terminal({ vfs, id, setVfs, onDestroy }: TerminalProps) {
+export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: TerminalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [history, setHistory] = useState<CommandBlockProps[]>([]);
-  // Per-terminal session currentPath
+  const [terminalHistory, setTerminalHistory] = useState<CommandBlockProps[]>([]);
   const [currentPath, setCurrentPath] = useState<string[]>(['/', 'home', 'badraan']);
-
+  const [currentSelectedHistoryIndex, setCurrentSelectedHistoryIndex] = useState(0);
+  // const [completion, dispatch] = useReducer(completionReducer, initialCompletionState);
   const [prompt, setPrompt] = useState(
     <>
-      ~<span className='text-white'>&nbsp;👉</span>
+      ~<span className="text-white">&nbsp;👉</span>
     </>
   );
 
-  type CommandFunction = (args: string[]) => ReactNode;
-
-  const commands: Record<string, CommandFunction> = {
-    '': () => <p></p>,
-    clear: () => {
-      setHistory([]);
-      return <p></p>;
-    },
-    echo: (args: string[]) => (args.length ? <p>Badraan Says: {args.join(' ')}</p> : <p>Invalid echo command. Usage: echo &lt;message&gt;</p>),
-    whoami: () => <p>badraan</p>,
-    date: () => <p>{new Date().toLocaleString()}</p>,
-    uname: () => <p>Linux badraan 5.15.0-67-generic #74~20.04.1-Ubuntu SMP Thu Aug 10 16:08:59 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux</p>,
-    ls: () => ls(vfs, currentPath),
-    cd: (args: string[]) => {
-      if (args.length === 0) return <p>Invalid cd command. Usage: cd &lt;directory&gt;</p>;
-      const output = cd(vfs, currentPath, setCurrentPath, args[0]);
-      if (output) return <p>{output}</p>;
-      return <></>;
-    },
-    pwd: () => <p>{pwd(currentPath)}</p>,
-    cat: (args: string[]) => <p>{cat(vfs, currentPath, args[0])}</p>,
-    mkdir: (args: string[]) => {
-      const output = mkdir(vfs, setVfs, currentPath, args[0]);
-      return <p>{output}</p>;
-    },
-    help: () => <p>Available commands: clear, help, echo, date, whoami, pwd, uname, ls, cd, mkdir, cat, open</p>,
-    open: (args: string[]) => {
-      if (!args[0]) return <p>Invalid open command. Usage: open &lt;file&gt;</p>;
-      const content = cat(vfs, currentPath, args[0]);
-      if (!content) return <p>File not found or empty.</p>;
-      // Simple URL check
-      try {
-        const url = new URL(content, window.location.origin);
-        // If it's an absolute URL or a root-relative path
-        if (/^https?:\/\//.test(content) || content.startsWith('/')) {
-          setTimeout(() => {
-            window.open(url.href, '_blank', 'noopener,noreferrer');
-          }, 500);
-          return (
-            <p>
-              <span className='text-gray-300'>Opening: </span>
-              <a href={url.href} target='_blank' rel='noopener noreferrer' className='text-blue-400 underline'>
-                {args[0]}
-              </a>
-            </p>
-          );
-        }
-      } catch {
-        // Not a valid URL, fall through
-      }
-      // Not a URL, just show content
-      return <p>{content}</p>;
-    },
-    touch: (args: string[]) => {
-      if (args.length === 0) return <p>Invalid touch command. Usage: touch &lt;filename&gt;</p>;
-      const output = touch(vfs, setVfs, currentPath, args[0]);
-      return <p>{output}</p>;
-    },
+  const context = {
+    vfs,
+    setVfs,
+    currentPath,
+    setCurrentPath,
+    setTerminalHistory,
+    history,
   };
+  const commands = getCommands(context);
+
+  function addToHistory(command: string) {
+    setHistory((prev: string[]) => {
+      const newHistory = [...prev, command];
+      if (newHistory.length > 100) {
+        newHistory.shift(); // Keep history size manageable
+      }
+      return newHistory;
+    });
+  }
 
   function handleCommand(fullCommand: string): ReactNode {
     const command = fullCommand.trim().split(' ');
@@ -96,37 +77,71 @@ export function Terminal({ vfs, id, setVfs, onDestroy }: TerminalProps) {
 
     if (command[0] in commands) {
       const commandFunc = commands[command[0]];
-      return commandFunc(command.slice(1));
+      return commandFunc(command.slice(1), {
+        vfs,
+        setVfs,
+        currentPath,
+        setCurrentPath,
+        setTerminalHistory,
+        history,
+      });
     }
     return 'Command not found: ' + command[0];
   }
 
   function enterCommand(command: string) {
+    addToHistory(command);
     setInputValue('');
     const promptStr = pwd(currentPath).replace('/home/badraan', '~');
     const output = handleCommand(command);
     if (command.trim().startsWith('clear')) return;
-    setHistory((prev) => [...prev, { prompt: promptStr, command, output }]);
+    setTerminalHistory((prev) => [...prev, { prompt: promptStr, command, output }]);
   }
+
+  // function handleTabCompletion() {
+  //   const words = inputValue.split(' ');
+  //   const baseWord = words[words.length - 1];
+  //   const isCommand = words.length === 1 && inputValue[inputValue.length - 1] !== ' ';
+  //   const candidates = isCommand ? Object.keys(commands) : ls(vfs, currentPath)?.map((item) => item.content);
+  //   if (!candidates) return;
+  //   const matches = candidates.filter((cmd) => cmd.startsWith(baseWord));
+  //   if (completion.index === 0) {
+  //     dispatch({
+  //       type: 'START_CYCLE',
+  //       baseWord,
+  //       matches,
+  //       function: setInputValue,
+  //     });
+  //   } else {
+  //     dispatch({
+  //       type: 'NEXT_MATCH',
+  //       function: (string) => setInputValue(words.slice(0, -1).join(' ') + ' ' + string),
+  //     });
+  //   }
+  // }
 
   useEffect(() => {
     inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     setPrompt(
       <>
         {pwd(currentPath).replace('/home/badraan', '~')}
-        <span className='text-white'>&nbsp;👉</span>
+        <span className="text-white">&nbsp;👉</span>
       </>
     );
-  }, [history, currentPath]);
+  }, [terminalHistory, currentPath]);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   return (
-    <div
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      style={{ transformOrigin: '0 50%' }}
+      className={`overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow hover:cursor-text ${isFocused ? 'ring-2 ring-blue-400' : ''}`}
       id={`terminal-${id}`}
-      className={`bg-black/60 overflow-auto rounded-md p-3 font-mono text-sm shadow border-gray-700 border-2 hover:cursor-text ${isFocused ? 'ring-2 ring-blue-400' : ''}`}
       onMouseDown={(e) => {
         if (document.activeElement === inputRef.current) return;
         e.preventDefault();
@@ -139,26 +154,27 @@ export function Terminal({ vfs, id, setVfs, onDestroy }: TerminalProps) {
           inputRef.current?.blur();
           onDestroy();
         }
-      }}>
+      }}
+    >
       {/* Command History */}
-      {history.map((commandBlock, index) => (
+      {terminalHistory.map((commandBlock, index) => (
         <CommandBlock
           key={index}
           commandLine={
             <>
-              <span className='text-green-400'>{commandBlock.prompt}</span>
-              <span className='text-white'>&nbsp;👉</span> <span>{commandBlock.command}</span>
+              <span className="text-green-400">{commandBlock.prompt}</span>
+              <span className="text-white">&nbsp;👉</span> <span>{commandBlock.command}</span>
             </>
           }
           output={commandBlock.output}
         />
       ))}
       {/* Prompt + Command Line */}
-      <div className='flex gap-2 items-center'>
-        <span className='text-green-400'>{prompt}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-green-400">{prompt}</span>
         <input
-          type='text'
-          className={`bg-transparent border-none outline-none grow ${inputValue.trim().split(' ')[0] in commands ? 'text-white' : 'text-gray-500'}`}
+          type="text"
+          className={`grow border-none bg-transparent outline-none ${inputValue.trim().split(' ')[0] in commands ? 'text-white' : 'text-gray-500'}`}
           ref={inputRef}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -169,19 +185,39 @@ export function Terminal({ vfs, id, setVfs, onDestroy }: TerminalProps) {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               enterCommand(inputValue);
+            } else if (e.key === 'ArrowUp') {
+              const prevCommand = history[history.length - 1 - currentSelectedHistoryIndex];
+              if (prevCommand) {
+                setInputValue(prevCommand);
+                setCurrentSelectedHistoryIndex((prev) => prev + 1);
+              }
+            } else if (e.key === 'ArrowDown') {
+              if (currentSelectedHistoryIndex > 0) {
+                setCurrentSelectedHistoryIndex((prev) => prev - 1);
+                const nextCommand = history[history.length - 1 - currentSelectedHistoryIndex + 1];
+                if (nextCommand) {
+                  setInputValue(nextCommand);
+                } else {
+                  setInputValue('');
+                }
+              }
             }
+            //  else if (e.key === 'Tab') {
+            //   e.preventDefault();
+            //   handleTabCompletion();
+            // }
           }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function CommandBlock({ commandLine, output }: { commandLine: ReactNode; output: ReactNode }) {
   return (
-    <div className='mb-2'>
+    <div className="mb-2">
       <div>{commandLine}</div>
-      <div className='text-gray-300'>{output}</div>
+      <div className="text-gray-300">{output}</div>
     </div>
   );
 }

@@ -1,13 +1,38 @@
+'use client';
 import Header from '@/components/Header';
-import Main from '@/components/Main';
+import TerminalGrid from '@/components/TerminalGrid';
+import { useEffect, useRef } from 'react';
 
 export default function Home() {
+  const childRef = useRef<{
+    childMethod: () => void;
+    spawnTerminal?: () => void;
+  }>(null);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.altKey && event.key.toLowerCase() === 't') {
+        event.preventDefault();
+        childRef.current?.spawnTerminal?.();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <>
       <Header />
-      <Main />
-      <p className='mx-auto text-center mb-2 text-xs text-gray-500'>
-        Photo by <a href='https://unsplash.com/@betagamma?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Daniil Silantev</a> on <a href='https://unsplash.com/photos/mountains-are-silhouetted-against-a-vibrant-sunrise-6VhIHgqo5qI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash'>Unsplash</a>
+      <TerminalGrid ref={childRef} />
+      <p className="mx-auto mb-2 text-center text-xs text-gray-500">
+        Photo by{' '}
+        <a href="https://unsplash.com/@betagamma?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
+          Daniil Silantev
+        </a>{' '}
+        on{' '}
+        <a href="https://unsplash.com/photos/mountains-are-silhouetted-against-a-vibrant-sunrise-6VhIHgqo5qI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
+          Unsplash
+        </a>
       </p>
     </>
   );
