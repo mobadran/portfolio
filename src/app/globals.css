@@ -56,15 +56,11 @@ body,
 }
 
 main {
-  height: calc(
-    100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14)
-  );
-
+  height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14));
   /* Terminal Grid */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 8px;
-  /* height: 100%; */
   padding: 8px;
 }
 
