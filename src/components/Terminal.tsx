@@ -5,6 +5,7 @@ import { getCommands } from '@/lib/commands';
 import { pwd } from '@/lib/vfs';
 import type { ReactNode } from 'react';
 import type { CommandBlockProps, TerminalProps } from '@/types/terminal';
+import CommandBlock from './CommandBlock';
 
 // const initialCompletionState: CompletionState = {
 //   baseWord: '',
@@ -58,6 +59,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
     setCurrentPath,
     setTerminalHistory,
     history,
+    onDestroy,
   };
   const commands = getCommands(context);
 
@@ -77,14 +79,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
 
     if (command[0] in commands) {
       const commandFunc = commands[command[0]];
-      return commandFunc(command.slice(1), {
-        vfs,
-        setVfs,
-        currentPath,
-        setCurrentPath,
-        setTerminalHistory,
-        history,
-      });
+      return commandFunc(command.slice(1), context);
     }
     return 'Command not found: ' + command[0];
   }
@@ -187,7 +182,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
               enterCommand(inputValue);
             } else if (e.key === 'ArrowUp') {
               const prevCommand = history[history.length - 1 - currentSelectedHistoryIndex];
-              if (prevCommand) {
+              if (prevCommand || prevCommand === '') {
                 setInputValue(prevCommand);
                 setCurrentSelectedHistoryIndex((prev) => prev + 1);
               }
@@ -195,7 +190,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
               if (currentSelectedHistoryIndex > 0) {
                 setCurrentSelectedHistoryIndex((prev) => prev - 1);
                 const nextCommand = history[history.length - 1 - currentSelectedHistoryIndex + 1];
-                if (nextCommand) {
+                if (nextCommand || nextCommand === '') {
                   setInputValue(nextCommand);
                 } else {
                   setInputValue('');
@@ -210,14 +205,5 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
         />
       </div>
     </motion.div>
-  );
-}
-
-function CommandBlock({ commandLine, output }: { commandLine: ReactNode; output: ReactNode }) {
-  return (
-    <div className="mb-2">
-      <div>{commandLine}</div>
-      <div className="text-gray-300">{output}</div>
-    </div>
   );
 }

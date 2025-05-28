@@ -22,7 +22,6 @@ const TerminalGrid = forwardRef((props, ref) => {
 
   function spawnTerminal() {
     if (terminalIds.length >= 4) {
-      console.log(terminalIds);
       showWarning('Maximum number of terminals reached (4)');
       return;
     }
@@ -39,8 +38,8 @@ const TerminalGrid = forwardRef((props, ref) => {
         showWarning('Cannot destroy the last terminal. Use Alt+S to go to home.');
         return;
       }
-      console.log('Previous terminal IDs:', terminalIds);
-      console.log('Destroying terminal with ID:', id);
+      const nextTerminal = terminalIds[terminalIds.indexOf(id) + 1] || terminalIds[terminalIds.indexOf(id) - 1];
+      (document.querySelector(`#terminal-${nextTerminal} input`) as HTMLInputElement | null)?.focus();
       setTerminalIds((prev) => prev.filter((tid) => tid !== id));
     },
     [terminalIds]
@@ -55,12 +54,21 @@ const TerminalGrid = forwardRef((props, ref) => {
   }));
 
   return (
-    <main className="auto-cols-2 auto-rows-2 grid grow gap-2 overflow-hidden p-4">
+    //  className="auto-cols-2 auto-rows-2 grid gap-2 overflow-hidden p-4"
+    <>
       {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
       {terminalIds.map((id) => (
-        <Terminal key={id} id={id} vfs={vfs} setVfs={setVfs} onDestroy={() => destroyTerminal(id)} history={history} setHistory={setHistory} />
+        <Terminal
+          key={id}
+          id={id}
+          vfs={vfs}
+          setVfs={setVfs}
+          onDestroy={() => destroyTerminal(id)}
+          history={history}
+          setHistory={setHistory}
+        />
       ))}
-    </main>
+    </>
   );
 });
 
