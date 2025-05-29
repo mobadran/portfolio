@@ -29,6 +29,7 @@ export default function Loading({ unmount }: { unmount: () => void }) {
   const [currentOutput, setCurrentOutput] = useState<ReactNode>();
   const [terminalHistory, setTerminalHistory] = useState<LoadingCommandBlockProps[]>([]);
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
   const buildSequence = () => {
     let outputSoFar: ReactNode = '';
@@ -82,9 +83,16 @@ export default function Loading({ unmount }: { unmount: () => void }) {
 
   useEffect(() => {
     if (currentCommandIndex === -1) {
-      setTimeout(() => {
+      const timerIsExiting = setTimeout(() => {
+        setIsExiting(true);
+      }, 400);
+      const timer = setTimeout(() => {
         unmount();
-      }, 500);
+      }, 700);
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(timerIsExiting);
+      };
     }
   }, [currentCommandIndex, unmount]);
 
@@ -92,7 +100,8 @@ export default function Loading({ unmount }: { unmount: () => void }) {
     <>
       {/* History */}
       <div
-        className={`overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 hover:cursor-text`}
+        style={{ transformOrigin: '0 0' }}
+        className={`m-2 grow overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
       >
         {terminalHistory.map((commandBlock, index) => (
           <CommandBlock

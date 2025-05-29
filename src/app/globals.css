@@ -51,13 +51,20 @@ body,
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: color;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
+  /* overflow: hidden; */
 }
 
 main {
-  height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14));
-  /* Terminal Grid */
+  /* height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14)); */
+  flex-grow: 1;
+}
+
+main > div {
+  height: 100%;
+}
+
+#terminalGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 8px;
@@ -86,4 +93,58 @@ main {
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a7a5;
   cursor: auto;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation:
+    gradient 5s ease infinite,
+    glow 1.5s ease-in-out infinite alternate;
+  /* filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.2)) drop-shadow(0 0 12px rgba(0, 255, 255, 0.2)); */
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 0 rgba(0, 255, 255, 0.2)) drop-shadow(0 0 0 rgba(0, 255, 255, 0.2));
+  }
+  to {
+    filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.2)) drop-shadow(0 0 24px rgba(0, 255, 255, 0.2));
+  }
+}
+
+strong {
+  color: #00e07e;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.2)) drop-shadow(0 0 12px rgba(0, 255, 255, 0.2));
+}
+
+.glow:hover {
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+}
+
+hr {
+  width: 50%;
+  color: rgba(255, 255, 255, 0.2);
+  /* border-width: 2px; */
+}
+
+/* spotlight.css */
+.spotlight-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  clip-rule: evenodd;
+  z-index: 1000;
+  transition: clip-path 0.3s ease;
+  cursor: pointer;
 }
