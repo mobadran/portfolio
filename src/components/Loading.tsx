@@ -97,11 +97,10 @@ export default function Loading({ unmount }: { unmount: () => void }) {
   }, [currentCommandIndex, unmount]);
 
   return (
-    <>
-      {/* History */}
+    <div className="flex grow items-center justify-center">
       <div
-        style={{ transformOrigin: '0 0' }}
-        className={`m-2 grow overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
+        style={{ transformOrigin: '50% 50%' }}
+        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
       >
         {terminalHistory.map((commandBlock, index) => (
           <CommandBlock
@@ -141,6 +140,6 @@ export default function Loading({ unmount }: { unmount: () => void }) {
         {/* Current Output */}
         <div>{currentOutput}</div>
       </div>
-    </>
+    </div>
   );
 }

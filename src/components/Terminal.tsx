@@ -133,8 +133,9 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
     <motion.div
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
-      style={{ transformOrigin: '0 50%' }}
+      style={{ transformOrigin: '50% 50%' }}
       className={`overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow hover:cursor-text ${isFocused ? 'ring-2 ring-blue-400' : ''}`}
       id={`terminal-${id}`}
       onMouseDown={(e) => {

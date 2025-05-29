@@ -146,5 +146,4 @@ hr {
   clip-rule: evenodd;
   z-index: 1000;
   transition: clip-path 0.3s ease;
-  cursor: pointer;
 }

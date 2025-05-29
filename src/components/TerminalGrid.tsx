@@ -6,9 +6,10 @@ import { Terminal } from './Terminal';
 import { initVFS } from '@/lib/vfs';
 import type { Directory } from '@/types/vfs';
 import Modal from './Modal';
+import { AnimatePresence } from 'framer-motion';
 
-const TerminalGrid = forwardRef((props, ref) => {
-  const [terminalIds, setTerminalIds] = useState<number[]>([0]);
+const TerminalGrid = forwardRef(({ exiting = false, onExited }: { exiting: boolean; onExited: () => void }, ref) => {
+  const [terminalIds, setTerminalIds] = useState<number[]>([]);
   const [warningShown, setWarningShown] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [vfs, setVfs] = useState<Directory | null>(null);
@@ -47,7 +48,14 @@ const TerminalGrid = forwardRef((props, ref) => {
 
   useEffect(() => {
     initVFS().then(setVfs);
+    setTerminalIds([nextId.current++]);
   }, []);
+
+  useEffect(() => {
+    if (exiting) {
+      setTerminalIds([]);
+    }
+  }, [exiting]);
 
   useImperativeHandle(ref, () => ({
     spawnTerminal,
@@ -55,19 +63,26 @@ const TerminalGrid = forwardRef((props, ref) => {
 
   return (
     //  className="auto-cols-2 auto-rows-2 grid gap-2 overflow-hidden p-4"
-    <div id="terminalGrid">
+    <div className="grow" id="terminalGrid">
       {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
-      {terminalIds.map((id) => (
-        <Terminal
-          key={id}
-          id={id}
-          vfs={vfs}
-          setVfs={setVfs}
-          onDestroy={() => destroyTerminal(id)}
-          history={history}
-          setHistory={setHistory}
-        />
-      ))}
+      <AnimatePresence
+        onExitComplete={() => {
+          console.log('Animation exit completed');
+          onExited?.();
+        }}
+      >
+        {terminalIds.map((id) => (
+          <Terminal
+            key={id}
+            id={id}
+            vfs={vfs}
+            setVfs={setVfs}
+            onDestroy={() => destroyTerminal(id)}
+            history={history}
+            setHistory={setHistory}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 });

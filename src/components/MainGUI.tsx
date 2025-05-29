@@ -36,7 +36,7 @@ function MainGUI() {
         <p className="text-center text-lg text-white/80 lg:text-2xl">
           <strong>MERN Stack</strong> Developer with experience in <strong>Next.js</strong> and <strong>MySQL</strong>.
           Looking for opportunities to grow as a developer and contribute to solid teams. Also, I love{' '}
-          <strong>cats!</strong>
+          <strong>cats!</strong> 😸
           {/* <br /> */}
           {/* Ready to transform your Mona Lisa into a functional eye-catching website?{' '} */}
         </p>
@@ -53,29 +53,29 @@ function MainGUI() {
       {/* Skills */}
       <section className="container flex justify-center">
         <ul className="mx-auto flex flex-wrap justify-center gap-14 text-5xl text-white/40">
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
-            <FaReact title="React.js" />
-            <span className="text-lg">React.js</span>
-          </li>
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
-            <SiNextdotjs title="Next.js" />
-            <span className="text-lg">Next.js</span>
-          </li>
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
-            <SiTypescript title="TypeScript" />
-            <span className="text-lg">TypeScript</span>
-          </li>
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
             <SiMongodb title="MongoDB" />
             <span className="text-lg">MongoDB</span>
           </li>
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
-            <GrMysql title="MySQL" />
-            <span className="text-lg">MySQL</span>
-          </li>
-          <li className="flex flex-col items-center gap-2 hover:cursor-pointer hover:text-white">
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
             <SiExpress title="Express.js" />
             <span className="text-lg">Express.js</span>
+          </li>
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
+            <FaReact title="React.js" />
+            <span className="text-lg">React.js</span>
+          </li>
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
+            <SiNextdotjs title="Next.js" />
+            <span className="text-lg">Next.js</span>
+          </li>
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
+            <SiTypescript title="TypeScript" />
+            <span className="text-lg">TypeScript</span>
+          </li>
+          <li className="flex flex-col items-center gap-2 transition-colors duration-250 hover:cursor-pointer hover:text-white">
+            <GrMysql title="MySQL" />
+            <span className="text-lg">MySQL</span>
           </li>
         </ul>
       </section>
@@ -116,7 +116,7 @@ function MainGUI() {
                   </div>
 
                   {/* Description */}
-                  <p>A Project that took 3 days to complete and showed my creativity and React skills.</p>
+                  <p>A Project that took 4 days to complete and showed my creativity and React skills.</p>
                   {/* Links */}
                   <div className="flex items-start gap-6 text-white/50">
                     <a className="hover:text-white" href="https://github.com/mobadran/portfolio" target="_blank">
