@@ -72,8 +72,8 @@ const Spotlight = ({ targetSelector, onClose }: { targetSelector: string; onClos
     top: rect.bottom + 16,
     transform: 'translateX(-50%)',
     zIndex: 10001,
-    background: 'white',
-    color: '#222',
+    background: '#0d0d0d',
+    color: '#ffffffd0',
     borderRadius: 8,
     boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
     padding: '1.5rem 2rem',
@@ -98,15 +98,17 @@ const Spotlight = ({ targetSelector, onClose }: { targetSelector: string; onClos
         <div className="mb-4 text-lg">
           Email: <b>badraanmo@gmail.com</b>
           <br />
-          You can also find my <b>Github</b> and <b>LinkedIn</b> here.
-          <br />
-          You can download my <b>resume</b> from the{' '}
+          View my <b>resume</b> from the{' '}
           <span className="mx-1 inline-flex items-center align-middle">
             <PiReadCvLogoBold />
           </span>{' '}
-          icon{' '}
+          icon <br />
+          Also my <b>Github</b> and <b>LinkedIn</b> are here.
         </div>
-        <button className="mt-2 rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-500" onClick={onClose}>
+        <button
+          className="mt-2 cursor-pointer rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-500"
+          onClick={onClose}
+        >
           Close
         </button>
       </div>

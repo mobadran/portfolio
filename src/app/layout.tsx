@@ -1,3 +1,4 @@
+import { SwitchProvider } from '@/context/SwitchProvider';
 import './globals.css';
 
 export default function RootLayout({
@@ -13,7 +14,9 @@ export default function RootLayout({
         <title>Badraan&apos; s Terminal</title>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>{children}</body>
+      <body>
+        <SwitchProvider>{children}</SwitchProvider>
+      </body>
     </html>
   );
 }
