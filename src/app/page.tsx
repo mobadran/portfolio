@@ -1,11 +1,13 @@
 'use client';
 import Header from '@/components/Header';
 import Loading from '@/components/Loading';
+import MainGUI from '@/components/MainGUI';
 import TerminalGrid from '@/components/TerminalGrid';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  // ! Don't forget to make isHome initial state false
+  const [currentScreen, setCurrentScreen] = useState<0 | 1 | 2>(0);
   const childRef = useRef<{
     childMethod: () => void;
     spawnTerminal?: () => void;
@@ -23,23 +25,33 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <div
+      className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
+    >
       <Header />
-      <main>
-        {isLoading ? (
+      <main className="flex flex-col">
+        {currentScreen === 0 ? (
           <Loading
             unmount={() => {
-              setIsLoading(false);
+              setCurrentScreen(1);
             }}
           />
+        ) : currentScreen === 1 ? (
+          <MainGUI />
         ) : (
           <TerminalGrid ref={childRef} />
         )}
       </main>
-      <p className="mx-auto mb-2 text-center text-xs text-gray-500">
-        Photo by <a href="https://unsplash.com/@betagamma?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Daniil Silantev</a> on{' '}
-        <a href="https://unsplash.com/photos/mountains-are-silhouetted-against-a-vibrant-sunrise-6VhIHgqo5qI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+      <p className="mx-auto pb-2 text-center text-xs text-gray-500">
+        Photo by{' '}
+        <a href="https://unsplash.com/@betagamma?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
+          Daniil Silantev
+        </a>{' '}
+        on{' '}
+        <a href="https://unsplash.com/photos/mountains-are-silhouetted-against-a-vibrant-sunrise-6VhIHgqo5qI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
+          Unsplash
+        </a>
       </p>
-    </>
+    </div>
   );
 }

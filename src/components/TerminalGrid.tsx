@@ -55,7 +55,7 @@ const TerminalGrid = forwardRef((props, ref) => {
 
   return (
     //  className="auto-cols-2 auto-rows-2 grid gap-2 overflow-hidden p-4"
-    <>
+    <div id="terminalGrid">
       {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
       {terminalIds.map((id) => (
         <Terminal
@@ -68,7 +68,7 @@ const TerminalGrid = forwardRef((props, ref) => {
           setHistory={setHistory}
         />
       ))}
-    </>
+    </div>
   );
 });
 
