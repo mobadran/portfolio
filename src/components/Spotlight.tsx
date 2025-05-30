@@ -68,7 +68,7 @@ const Spotlight = ({ targetSelector, onClose }: { targetSelector: string; onClos
   // Dialog position: below the target element
   const dialogStyle: React.CSSProperties = {
     position: 'fixed',
-    left: rect.left - rect.width,
+    left: rect.left,
     top: rect.bottom + 16,
     transform: 'translateX(-50%)',
     zIndex: 10001,
