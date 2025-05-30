@@ -103,49 +103,51 @@ export default function Loading({ unmount, stopLoading }: { unmount: () => void;
   }, [stopLoading]);
 
   return (
-    <div className="flex grow items-center justify-center">
-      <div
-        style={{ transformOrigin: '50% 50%' }}
-        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
-      >
-        {terminalHistory.map((commandBlock, index) => (
-          <CommandBlock
-            key={index}
-            commandLine={
-              <>
-                <span className="text-green-400">
-                  ~<span className="text-white">&nbsp;👉</span>
-                </span>{' '}
-                <span>{commandBlock.command}</span>
-              </>
-            }
-            output={commandBlock.output}
-          />
-        ))}
-        {/* Prompt + Command Line */}
-        {currentCommandIndex !== -1 && (
-          <div className="flex items-center gap-2">
-            <span className="text-green-400">
-              ~<span className="text-white">&nbsp;👉</span>
-            </span>
-            <pre>
-              {currentCommandIndex === -1 ? null : (
-                <TypeAnimation
-                  key={currentCommandIndex}
-                  sequence={buildSequence()}
-                  wrapper="div"
-                  speed={60}
-                  cursor={true}
-                  repeat={0}
-                />
-              )}
-            </pre>
-          </div>
-        )}
+    <main className="fixed-height flex flex-col">
+      <div className="flex grow items-center justify-center">
+        <div
+          style={{ transformOrigin: '50% 50%' }}
+          className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
+        >
+          {terminalHistory.map((commandBlock, index) => (
+            <CommandBlock
+              key={index}
+              commandLine={
+                <>
+                  <span className="text-green-400">
+                    ~<span className="text-white">&nbsp;👉</span>
+                  </span>{' '}
+                  <span>{commandBlock.command}</span>
+                </>
+              }
+              output={commandBlock.output}
+            />
+          ))}
+          {/* Prompt + Command Line */}
+          {currentCommandIndex !== -1 && (
+            <div className="flex items-start gap-2">
+              <span className="text-green-400">
+                ~<span className="text-white">&nbsp;👉</span>
+              </span>
+              <div className="grow break-all whitespace-pre-wrap">
+                {currentCommandIndex === -1 ? null : (
+                  <TypeAnimation
+                    key={currentCommandIndex}
+                    sequence={buildSequence()}
+                    wrapper="div"
+                    speed={60}
+                    cursor={true}
+                    repeat={0}
+                  />
+                )}
+              </div>
+            </div>
+          )}
 
-        {/* Current Output */}
-        <div>{currentOutput}</div>
+          {/* Current Output */}
+          <div className="break-words whitespace-pre-wrap">{currentOutput}</div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -62,27 +62,29 @@ const TerminalGrid = forwardRef(({ exiting = false, onExited }: { exiting: boole
   }));
 
   return (
-    <div className="grow" id="terminalGrid">
-      {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
-      <AnimatePresence
-        onExitComplete={() => {
-          console.log('Animation exit completed');
-          onExited?.();
-        }}
-      >
-        {terminalIds.map((id) => (
-          <Terminal
-            key={id}
-            id={id}
-            vfs={vfs}
-            setVfs={setVfs}
-            onDestroy={() => destroyTerminal(id)}
-            history={history}
-            setHistory={setHistory}
-          />
-        ))}
-      </AnimatePresence>
-    </div>
+    <main className="fixed-height flex flex-col">
+      <div className="grow" id="terminalGrid">
+        {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
+        <AnimatePresence
+          onExitComplete={() => {
+            console.log('Animation exit completed');
+            onExited?.();
+          }}
+        >
+          {terminalIds.map((id) => (
+            <Terminal
+              key={id}
+              id={id}
+              vfs={vfs}
+              setVfs={setVfs}
+              onDestroy={() => destroyTerminal(id)}
+              history={history}
+              setHistory={setHistory}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+    </main>
   );
 });
 

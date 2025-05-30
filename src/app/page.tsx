@@ -56,13 +56,11 @@ export default function Home() {
       className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
     >
       <Header SkipButton={currentScreen === 0 ? <SkipButton setStopLoading={setStopLoading} /> : null} />
-      <main className="flex flex-col">
-        {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
-        {currentScreen === 1 && <MainGUI />}
-        {currentScreen === 2 && (
-          <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
-        )}
-      </main>
+      {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
+      {currentScreen === 1 && <MainGUI />}
+      {currentScreen === 2 && (
+        <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
+      )}
       {/* Attribution */}
       <p className="mx-auto pb-2 text-center text-xs text-gray-500">
         Photo by{' '}
