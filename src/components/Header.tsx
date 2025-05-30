@@ -5,14 +5,14 @@ import { IoMdMail } from 'react-icons/io';
 import { PiReadCvLogoBold } from 'react-icons/pi';
 import Switch from './Switch';
 
-const Header = () => {
+const Header = ({ SkipButton }: { SkipButton: React.ReactNode | null }) => {
   const date = useClock();
 
   return (
     <header className="flex h-14 items-center justify-between bg-neutral-900/60 px-8 py-1">
       {/* Badraan */}
       {/* <div className="text-2xl font-bold text-white">Badraan</div> */}
-      <Switch />
+      {SkipButton ? SkipButton : <Switch />}
 
       {/* Date & Time */}
       <div className="hidden h-full items-center gap-2 rounded-full px-3 text-sm text-white transition-colors duration-500 hover:bg-white/10 sm:flex">

@@ -25,7 +25,7 @@ const COMMANDS = [
   },
 ];
 
-export default function Loading({ unmount }: { unmount: () => void }) {
+export default function Loading({ unmount, stopLoading }: { unmount: () => void; stopLoading: boolean }) {
   const [currentOutput, setCurrentOutput] = useState<ReactNode>();
   const [terminalHistory, setTerminalHistory] = useState<LoadingCommandBlockProps[]>([]);
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
@@ -95,6 +95,12 @@ export default function Loading({ unmount }: { unmount: () => void }) {
       };
     }
   }, [currentCommandIndex, unmount]);
+
+  useEffect(() => {
+    if (stopLoading) {
+      setCurrentCommandIndex(-1);
+    }
+  }, [stopLoading]);
 
   return (
     <div className="flex grow items-center justify-center">
