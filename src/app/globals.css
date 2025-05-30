@@ -56,8 +56,11 @@ body,
 }
 
 main {
-  /* height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14)); */
   flex-grow: 1;
+}
+
+main.fixed-height {
+  height: calc(100vh - (var(--spacing) * 4 + var(--text-xs) + var(--spacing) * 14));
 }
 
 main > div {

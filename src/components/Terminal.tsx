@@ -39,7 +39,7 @@ import CommandBlock from './CommandBlock';
 // }
 
 export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: TerminalProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [terminalHistory, setTerminalHistory] = useState<CommandBlockProps[]>([]);
@@ -85,7 +85,9 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
   }
 
   function enterCommand(command: string) {
-    addToHistory(command);
+    if (command.trim() !== '' && command.trim() !== terminalHistory[terminalHistory.length - 1]?.command) {
+      addToHistory(command);
+    }
     setInputValue('');
     const promptStr = pwd(currentPath).replace('/home/badraan', '~');
     const output = handleCommand(command);
@@ -166,20 +168,25 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
         />
       ))}
       {/* Prompt + Command Line */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-start gap-2">
         <span className="text-green-400">{prompt}</span>
-        <input
-          type="text"
-          className={`grow border-none bg-transparent outline-none ${inputValue.trim().split(' ')[0] in commands ? 'text-white' : 'text-gray-500'}`}
+        <textarea
+          className={`grow resize-none border-none bg-transparent outline-none ${inputValue.trim().split(' ')[0] in commands ? 'text-white' : 'text-gray-500'}`}
           ref={inputRef}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           value={inputValue}
+          rows={1}
+          style={{ height: 'auto', minHeight: '1.5em' }}
           onChange={(e) => {
             setInputValue(e.target.value);
+            // Auto-resize the textarea
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
           }}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
               enterCommand(inputValue);
             } else if (e.key === 'ArrowUp') {
               const prevCommand = history[history.length - 1 - currentSelectedHistoryIndex];
@@ -198,10 +205,6 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
                 }
               }
             }
-            //  else if (e.key === 'Tab') {
-            //   e.preventDefault();
-            //   handleTabCompletion();
-            // }
           }}
         />
       </div>
