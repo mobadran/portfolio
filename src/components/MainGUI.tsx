@@ -24,8 +24,8 @@ function MainGUI() {
       <motion.div
         className="relative flex grow flex-col items-center justify-evenly gap-8 p-8"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 100 }}
-        transition={{ delay: 1, duration: 2, ease: 'easeOut' }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1, ease: 'easeOut' }}
       >
         {showHighlight && <Spotlight targetSelector="#socialLinks" onClose={() => setShowHighlight(false)} />}
         {/* Role, Name */}
@@ -103,6 +103,7 @@ function MainGUI() {
                       width={1000}
                       height={1000}
                       className="w-64 rounded-r-lg object-cover shadow-lg sm:w-100 md:w-125"
+                      priority
                     />
                   </div>
                   <div className="flex flex-col justify-between gap-4 p-4">
