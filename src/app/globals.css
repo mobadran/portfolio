@@ -147,3 +147,45 @@ hr {
   z-index: 1000;
   transition: clip-path 0.3s ease;
 }
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.border-gradient-animated {
+  position: relative;
+  z-index: 1;
+}
+
+.border-gradient-animated::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    #ff0000,
+    #ffa500,
+    #ffff00,
+    #008000,
+    #0000ff,
+    #4b0082,
+    #ee82ee,
+    #ff0000 360deg
+  );
+  animation: border-gradient-rotate 4s linear infinite;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 2px;
+}
+
+@keyframes border-gradient-rotate {
+  to {
+    --angle: 360deg;
+  }
+}

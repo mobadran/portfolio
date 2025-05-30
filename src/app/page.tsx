@@ -14,7 +14,7 @@ export default function Home() {
   }>(null);
   const [terminalExiting, setTerminalExiting] = useState(false);
   const isTerminal = useSwitch();
-
+  const [stopLoading, setStopLoading] = useState(false);
   function handleTerminalGridExited() {
     setCurrentScreen(1);
     setTerminalExiting(false);
@@ -55,9 +55,9 @@ export default function Home() {
     <div
       className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
     >
-      <Header />
+      <Header SkipButton={currentScreen === 0 ? <SkipButton setStopLoading={setStopLoading} /> : null} />
       <main className="flex flex-col">
-        {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} />}
+        {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
         {currentScreen === 1 && <MainGUI />}
         {currentScreen === 2 && (
           <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
@@ -75,5 +75,17 @@ export default function Home() {
         </a>
       </p>
     </div>
+  );
+}
+
+function SkipButton({ setStopLoading }: { setStopLoading: (value: boolean) => void }) {
+  return (
+    <button
+      className="border-gradient-animated rounded-full bg-black/60 px-3 py-1 text-white transition hover:cursor-pointer hover:bg-black/80"
+      onClick={() => setStopLoading(true)}
+      type="button"
+    >
+      Skip
+    </button>
   );
 }
