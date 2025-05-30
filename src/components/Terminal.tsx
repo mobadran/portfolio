@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { getCommands } from '@/lib/commands';
 import { pwd } from '@/lib/vfs';
@@ -40,6 +40,7 @@ import CommandBlock from './CommandBlock';
 
 export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: TerminalProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const hasRunHelp = useRef(false);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [terminalHistory, setTerminalHistory] = useState<CommandBlockProps[]>([]);
@@ -52,48 +53,60 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
     </>
   );
 
-  const context = {
-    vfs,
-    setVfs,
-    currentPath,
-    setCurrentPath,
-    setTerminalHistory,
-    history,
-    onDestroy,
-  };
-  const commands = getCommands(context);
+  const context = useMemo(
+    () => ({
+      vfs,
+      setVfs,
+      currentPath,
+      setCurrentPath,
+      setTerminalHistory,
+      history,
+      onDestroy,
+    }),
+    [vfs, setVfs, currentPath, setCurrentPath, setTerminalHistory, history, onDestroy]
+  );
+  const commands = useMemo(() => getCommands(context), [context]);
 
-  function addToHistory(command: string) {
-    setHistory((prev: string[]) => {
-      const newHistory = [...prev, command];
-      if (newHistory.length > 100) {
-        newHistory.shift(); // Keep history size manageable
+  const addToHistory = useCallback(
+    (command: string) => {
+      setHistory((prev: string[]) => {
+        const newHistory = [...prev, command];
+        if (newHistory.length > 100) {
+          newHistory.shift(); // Keep history size manageable
+        }
+        return newHistory;
+      });
+    },
+    [setHistory]
+  );
+
+  const handleCommand = useCallback(
+    (fullCommand: string): ReactNode => {
+      const command = fullCommand.trim().split(' ');
+      if (command[0] === '') return '';
+
+      if (command[0] in commands) {
+        const commandFunc = commands[command[0]];
+        return commandFunc(command.slice(1), context);
       }
-      return newHistory;
-    });
-  }
+      return 'Command not found: ' + command[0];
+    },
+    [commands, context]
+  );
 
-  function handleCommand(fullCommand: string): ReactNode {
-    const command = fullCommand.trim().split(' ');
-    if (command[0] === '') return '';
-
-    if (command[0] in commands) {
-      const commandFunc = commands[command[0]];
-      return commandFunc(command.slice(1), context);
-    }
-    return 'Command not found: ' + command[0];
-  }
-
-  function enterCommand(command: string) {
-    if (command.trim() !== '' && command.trim() !== terminalHistory[terminalHistory.length - 1]?.command) {
-      addToHistory(command);
-    }
-    setInputValue('');
-    const promptStr = pwd(currentPath).replace('/home/badraan', '~');
-    const output = handleCommand(command);
-    if (command.trim().startsWith('clear')) return;
-    setTerminalHistory((prev) => [...prev, { prompt: promptStr, command, output }]);
-  }
+  const enterCommand = useCallback(
+    (command: string) => {
+      if (command.trim() !== '' && command.trim() !== terminalHistory[terminalHistory.length - 1]?.command) {
+        addToHistory(command);
+      }
+      setInputValue('');
+      const promptStr = pwd(currentPath).replace('/home/badraan', '~');
+      const output = handleCommand(command);
+      if (command.trim().startsWith('clear')) return;
+      setTerminalHistory((prev) => [...prev, { prompt: promptStr, command, output }]);
+    },
+    [addToHistory, currentPath, handleCommand, setInputValue, setTerminalHistory]
+  );
 
   // function handleTabCompletion() {
   //   const words = inputValue.split(' ');
@@ -126,6 +139,13 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
       </>
     );
   }, [terminalHistory, currentPath]);
+
+  useEffect(() => {
+    if (!hasRunHelp.current) {
+      enterCommand('help');
+      hasRunHelp.current = true;
+    }
+  }, [enterCommand]);
 
   useEffect(() => {
     inputRef.current?.focus();
