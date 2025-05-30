@@ -105,6 +105,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
       if (command.trim().startsWith('clear')) return;
       setTerminalHistory((prev) => [...prev, { prompt: promptStr, command, output }]);
     },
+    // eslint-disable-next-line
     [addToHistory, currentPath, handleCommand, setInputValue, setTerminalHistory]
   );
 
