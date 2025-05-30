@@ -84,13 +84,13 @@ function MainGUI() {
       {/* Projects */}
       <section className="w-full lg:max-w-200">
         <div className="flex items-stretch">
-          <button
+          {/* <button
             onClick={() => instanceRef.current?.prev()}
             aria-label="Previous Slide"
             className="rounded-l-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
           >
             <IoMdArrowDropleft />
-          </button>
+          </button> */}
           <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
             <div className="keen-slider__slide w-full">
               <div className="flex flex-col items-center lg:flex-row">
@@ -149,15 +149,14 @@ function MainGUI() {
                 </div>
               </div>
             </div>
-            <div className="keen-slider__slide w-full">My Project #2</div>
           </div>
-          <button
+          {/* <button
             onClick={() => instanceRef.current?.next()}
             aria-label="Next Slide"
             className="rounded-r-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
           >
             <IoMdArrowDropright />
-          </button>
+          </button> */}
         </div>
       </section>
     </motion.div>

@@ -62,7 +62,6 @@ const TerminalGrid = forwardRef(({ exiting = false, onExited }: { exiting: boole
   }));
 
   return (
-    //  className="auto-cols-2 auto-rows-2 grid gap-2 overflow-hidden p-4"
     <div className="grow" id="terminalGrid">
       {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
       <AnimatePresence
