@@ -1,8 +1,8 @@
 import { FaGithub, FaGlobe, FaReact } from 'react-icons/fa';
-import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
+// import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
-import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
+// import 'keen-slider/keen-slider.min.css';
+// import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
 import { useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
@@ -13,12 +13,12 @@ import Spotlight from './Spotlight';
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
   const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
-  const [sliderRef, instanceRef] = useKeenSlider({
-    slideChanged() {
-      console.log('slide changed');
-    },
-    loop: true,
-  });
+  // const [sliderRef, instanceRef] = useKeenSlider({
+  //   slideChanged() {
+  //     console.log('slide changed');
+  //   },
+  //   loop: true,
+  // });
   return (
     <motion.div
       className="relative flex grow flex-col items-center justify-evenly gap-8 p-8"
@@ -91,7 +91,8 @@ function MainGUI() {
           >
             <IoMdArrowDropleft />
           </button> */}
-          <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
+          {/* <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm"> */}
+          <div className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
             <div className="keen-slider__slide w-full">
               <div className="flex flex-col items-center lg:flex-row">
                 <div>
@@ -118,7 +119,7 @@ function MainGUI() {
                   {/* Description */}
                   <p>A Project that took 4 days to complete and showed my creativity and React skills.</p>
                   {/* Links */}
-                  <div className="flex items-start gap-6 text-white/50">
+                  <div className="flex flex-wrap items-center gap-6 text-white/50">
                     <a className="hover:text-white" href="https://github.com/mobadran/portfolio" target="_blank">
                       <FaGithub />
                     </a>
@@ -145,6 +146,7 @@ function MainGUI() {
                         <FaGlobe />
                       )}
                     </button>
+                    <span className="text-sm text-white/50">Leave a star in the repo if you like it! 🌟</span>
                   </div>
                 </div>
               </div>
