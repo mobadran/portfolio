@@ -1,8 +1,8 @@
 import { FaGithub, FaGlobe, FaReact } from 'react-icons/fa';
-// import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
+import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
-// import 'keen-slider/keen-slider.min.css';
-// import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
+import 'keen-slider/keen-slider.min.css';
+import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
 import { useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
@@ -13,12 +13,12 @@ import Attribution from '@/components/Attribution';
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
   const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
-  // const [sliderRef, instanceRef] = useKeenSlider({
-  //   slideChanged() {
-  //     console.log('slide changed');
-  //   },
-  //   loop: true,
-  // });
+  const [sliderRef, instanceRef] = useKeenSlider({
+    slideChanged() {
+      console.log('slide changed');
+    },
+    loop: true,
+  });
   return (
     <div className="bg-dark-animation flex grow flex-col">
       <div
@@ -81,16 +81,15 @@ function MainGUI() {
         {/* Projects */}
         <section className="w-full lg:max-w-200">
           <div className="flex items-stretch">
-            {/* <button
-            onClick={() => instanceRef.current?.prev()}
-            aria-label="Previous Slide"
-            className="rounded-l-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
-          >
-            <IoMdArrowDropleft />
-          </button> */}
-            {/* <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm"> */}
-            <div className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
-              <div className="keen-slider__slide w-full">
+            <button
+              onClick={() => instanceRef.current?.prev()}
+              aria-label="Previous Slide"
+              className="rounded-l-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
+            >
+              <IoMdArrowDropleft />
+            </button>
+            <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
+              <div className="keen-slider__slide flex w-full flex-col justify-center">
                 <div className="flex flex-col items-center lg:flex-row">
                   <div>
                     <Image
@@ -149,14 +148,56 @@ function MainGUI() {
                   </div>
                 </div>
               </div>
+              <div className="keen-slider__slide flex w-full flex-col justify-center">
+                <div className="flex flex-col items-center lg:flex-row">
+                  <div>
+                    <Image
+                      src="/athar-image.png"
+                      alt="Athar Logo"
+                      width={1000}
+                      height={1000}
+                      className="w-64 rounded-r-lg object-cover shadow-lg sm:w-100 md:w-125"
+                      priority
+                    />
+                  </div>
+                  <div className="flex flex-col justify-between gap-4 p-4">
+                    <div className="flex justify-between">
+                      <div className="flex flex-col items-baseline gap-4 sm:flex-row">
+                        <h2 className="text-xl">Athar</h2>
+                        {/* Technologies */}
+                        <ul className="flex gap-2">
+                          <li className="rounded bg-cyan-900/40 px-2 py-1 text-sm text-sky-400">React Native</li>
+                          <li className="rounded bg-neutral-900 px-2 py-1 text-sm text-white">Expo</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p>
+                      I led a team of 5 students to create a mobile app for our school project. This project showed my
+                      fast learning ability since I had to learn React Native to create the Application
+                    </p>
+                    {/* Links */}
+                    <div className="flex flex-wrap items-center gap-6 text-white/50">
+                      <a
+                        className="hover:text-white"
+                        href="https://athar-server-production.up.railway.app"
+                        target="_blank"
+                      >
+                        <FaGlobe />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            {/* <button
-            onClick={() => instanceRef.current?.next()}
-            aria-label="Next Slide"
-            className="rounded-r-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
-          >
-            <IoMdArrowDropright />
-          </button> */}
+            <button
+              onClick={() => instanceRef.current?.next()}
+              aria-label="Next Slide"
+              className="rounded-r-2xl bg-[#0d0d0d]/60 p-0.25 text-white hover:cursor-pointer hover:bg-[#0d0d0d]/80 sm:p-2"
+            >
+              <IoMdArrowDropright />
+            </button>
           </div>
         </section>
       </div>
