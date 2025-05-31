@@ -5,10 +5,12 @@ import { IoMdMail } from 'react-icons/io';
 import { PiReadCvLogoBold } from 'react-icons/pi';
 import Switch from './Switch';
 import { useEffect, useState } from 'react';
+import { useScreen } from '@/context/ScreenContext';
 
-const Header = ({ SkipButton }: { SkipButton: React.ReactNode | null }) => {
+const Header = () => {
   const date = useClock();
   const [mounted, setMounted] = useState(false);
+  const { screen } = useScreen();
 
   useEffect(() => {
     setMounted(true);
@@ -17,7 +19,7 @@ const Header = ({ SkipButton }: { SkipButton: React.ReactNode | null }) => {
   return (
     <header className="flex h-14 items-center justify-between bg-neutral-900/60 px-8 py-1">
       {/* Skip Button or Switch */}
-      {SkipButton ? SkipButton : <Switch />}
+      {screen === 'loading' ? <SkipButton /> : <Switch />}
 
       {/* Date & Time */}
       <div className="hidden h-full items-center gap-2 rounded-full px-3 text-sm text-white transition-colors duration-500 hover:bg-white/10 sm:flex">
@@ -61,5 +63,18 @@ const Header = ({ SkipButton }: { SkipButton: React.ReactNode | null }) => {
     </header>
   );
 };
+
+function SkipButton() {
+  const { setScreen } = useScreen();
+  return (
+    <button
+      className="border-gradient-animated rounded-full bg-black/60 px-3 py-1 text-white transition hover:cursor-pointer hover:bg-black/80"
+      onClick={() => setScreen('gui')}
+      type="button"
+    >
+      Skip
+    </button>
+  );
+}
 
 export default Header;

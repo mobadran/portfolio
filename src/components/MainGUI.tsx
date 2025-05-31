@@ -20,9 +20,9 @@ function MainGUI() {
   //   loop: true,
   // });
   return (
-    <main className="bg-dark-animation flex flex-col">
+    <div className="bg-dark-animation flex grow flex-col">
       <div
-        className="opacity-animation flex grow flex-col items-center justify-evenly gap-8 p-8"
+        className="opacity-animation flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0"
         style={{ animationDelay: '0.5s' }}
       >
         {showHighlight && <Spotlight targetSelector="#socialLinks" onClose={() => setShowHighlight(false)} />}
@@ -161,7 +161,7 @@ function MainGUI() {
         </section>
       </div>
       <Attribution />
-    </main>
+    </div>
   );
 }
 
