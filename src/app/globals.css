@@ -210,6 +210,20 @@ hr {
   animation: dark-animation 0.3s linear forwards;
 }
 
+.opacity-animation {
+  opacity: 0;
+  animation: opacity-animation 0.5s ease-in-out forwards;
+}
+
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes dark-animation {
   from {
     background-color: transparent;
