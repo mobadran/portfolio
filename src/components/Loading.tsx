@@ -103,7 +103,7 @@ export default function Loading({ unmount, stopLoading }: { unmount: () => void;
   }, [stopLoading]);
 
   return (
-    <main className="fixed-height flex flex-col">
+    <main className="flex flex-col">
       <div className="flex grow items-center justify-center">
         <div
           style={{ transformOrigin: '50% 50%' }}
