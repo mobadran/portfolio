@@ -37,11 +37,25 @@ const Spotlight = ({ targetSelector, onClose }: { targetSelector: string; onClos
   const [rect, setRect] = useState<DOMRect | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
+  // useEffect(() => {
+  //   const target = document.querySelector(targetSelector);
+  //   if (target) {
+  //     setRect(target.getBoundingClientRect());
+  //   }
+  // }, [targetSelector]);
+
   useEffect(() => {
-    const target = document.querySelector(targetSelector);
-    if (target) {
-      setRect(target.getBoundingClientRect());
-    }
+    const handleResize = () => {
+      const target = document.querySelector(targetSelector);
+      if (target) {
+        setRect(target.getBoundingClientRect());
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [targetSelector]);
 
   if (!rect) return null;
