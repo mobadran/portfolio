@@ -205,3 +205,16 @@ hr {
     --angle: 360deg;
   }
 }
+
+.bg-dark-animation {
+  animation: dark-animation 0.3s linear forwards;
+}
+
+@keyframes dark-animation {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}

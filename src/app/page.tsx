@@ -53,7 +53,8 @@ export default function Home() {
 
   return (
     <div
-      className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
+      // className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
+      className={`flex min-h-screen flex-col transition-colors duration-600`}
     >
       <Header SkipButton={currentScreen === 0 ? <SkipButton setStopLoading={setStopLoading} /> : null} />
       {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
