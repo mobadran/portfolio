@@ -3,23 +3,32 @@ import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
 import { GrMysql } from 'react-icons/gr';
 import Spotlight from '@/components/Spotlight';
 import Attribution from '@/components/Attribution';
 import { motion } from 'framer-motion';
+import { useScreen } from '@/context/ScreenContext';
 
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
   const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
-  const [sliderRef, instanceRef] = useKeenSlider({
-    slideChanged() {
-      console.log('slide changed');
-    },
-    loop: true,
-  });
+  const { setScreen } = useScreen();
+  const [sliderRef, instanceRef] = useKeenSlider({ loop: true });
+
+  // Switch to CLI
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.altKey && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        setScreen('cli');
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setScreen]);
 
   return (
     <motion.div

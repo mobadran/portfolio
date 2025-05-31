@@ -38,7 +38,7 @@ import CommandBlock from './CommandBlock';
 //   }
 // }
 
-export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: TerminalProps) {
+function Terminal({ vfs, id, setVfs, history, setHistory, onDestroy }: TerminalProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasRunHelp = useRef(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -62,8 +62,9 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
       setTerminalHistory,
       history,
       onDestroy,
+      id,
     }),
-    [vfs, setVfs, currentPath, setCurrentPath, setTerminalHistory, history, onDestroy]
+    [vfs, setVfs, currentPath, setCurrentPath, setTerminalHistory, history, onDestroy, id]
   );
   const commands = useMemo(() => getCommands(context), [context]);
 
@@ -171,7 +172,7 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
           e.preventDefault();
           setIsFocused(false);
           inputRef.current?.blur();
-          onDestroy();
+          onDestroy(id);
         }
       }}
     >
@@ -232,3 +233,4 @@ export function Terminal({ vfs, id, setVfs, onDestroy, history, setHistory }: Te
     </motion.div>
   );
 }
+export default Terminal;

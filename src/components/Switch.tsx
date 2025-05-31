@@ -1,14 +1,14 @@
-import { useSwitch } from '@/context/SwitchContext';
+import { useScreen } from '@/context/ScreenContext';
 import { FaHome, FaTerminal } from 'react-icons/fa';
 
 function Switch() {
-  const { checked, setIsChecked } = useSwitch();
+  const { screen, setScreen } = useScreen();
   return (
     <div className="flex items-center">
       <label htmlFor="hs-large-soft-switch-with-icons" className="relative inline-block h-8 w-15 cursor-pointer">
         <input
-          checked={checked}
-          onChange={(e) => setIsChecked(e.target.checked)}
+          checked={screen === 'cli'}
+          onChange={(e) => setScreen(e.target.checked ? 'cli' : 'gui')}
           type="checkbox"
           id="hs-large-soft-switch-with-icons"
           className="peer sr-only"

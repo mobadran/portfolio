@@ -10,7 +10,7 @@ export type TerminalProps = {
   vfs: Directory | null;
   id: number;
   setVfs: (v: Directory) => void;
-  onDestroy: () => void;
+  onDestroy: (id: number) => void;
   history: string[];
   setHistory: (history: string[] | ((history: string[]) => string[])) => void;
 };

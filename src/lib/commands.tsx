@@ -17,7 +17,8 @@ type CommandFunction = (
     setCurrentPath: (p: string[]) => void;
     setTerminalHistory: React.Dispatch<React.SetStateAction<CommandBlockProps[]>>;
     history: string[];
-    onDestroy: () => void;
+    onDestroy: (id: number) => void;
+    id: number;
   }
 ) => ReactNode;
 
@@ -28,9 +29,10 @@ export function getCommands(context: {
   setCurrentPath: (p: string[]) => void;
   setTerminalHistory: React.Dispatch<React.SetStateAction<CommandBlockProps[]>>;
   history: string[];
-  onDestroy: () => void;
+  onDestroy: (id: number) => void;
+  id: number;
 }): Record<string, CommandFunction> {
-  const { vfs, setVfs, currentPath, setCurrentPath, setTerminalHistory, history, onDestroy } = context;
+  const { vfs, setVfs, currentPath, setCurrentPath, setTerminalHistory, history, onDestroy, id } = context;
   const commands: Record<string, CommandFunction> = {
     '': () => <p></p>,
     clear: (args: string[]) => {
@@ -204,7 +206,7 @@ export function getCommands(context: {
       );
     },
     exit: () => {
-      onDestroy();
+      onDestroy(id);
       return <></>;
     },
   };
