@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { GrMysql } from 'react-icons/gr';
 import Spotlight from '@/components/Spotlight';
 import Attribution from '@/components/Attribution';
+import { motion } from 'framer-motion';
 
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
@@ -19,12 +20,16 @@ function MainGUI() {
     },
     loop: true,
   });
+
   return (
-    <div className="bg-dark-animation flex grow flex-col">
-      <div
-        className="opacity-animation flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0"
-        style={{ animationDelay: '0.5s' }}
-      >
+    <motion.div
+      className="flex grow flex-col"
+      initial={{ opacity: 0, backgroundColor: 'rgba(0, 0, 0, 0)' }}
+      animate={{ opacity: 1, backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
+      exit={{ opacity: 0, backgroundColor: 'rgba(0, 0, 0, 0)' }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0">
         {showHighlight && <Spotlight targetSelector="#socialLinks" onClose={() => setShowHighlight(false)} />}
         {/* Role, Name */}
         <section className="flex max-w-250 flex-col items-center gap-4">
@@ -202,7 +207,7 @@ function MainGUI() {
         </section>
       </div>
       <Attribution />
-    </div>
+    </motion.div>
   );
 }
 

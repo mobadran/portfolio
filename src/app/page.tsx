@@ -56,11 +56,13 @@ export default function Home() {
     <div className="flex min-h-screen flex-col transition-colors duration-600">
       <Header />
       <main className="flex flex-col">
-        <AnimatePresence>{screen === 'loading' && <Loading />}</AnimatePresence>
-        {screen === 'gui' && <MainGUI />}
-        {screen === 'cli' && (
-          <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
-        )}
+        <AnimatePresence mode="wait">
+          {screen === 'loading' && <Loading key="loading" />}
+          {screen === 'gui' && <MainGUI key="gui" />}
+          {screen === 'cli' && (
+            <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} key="cli" />
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
