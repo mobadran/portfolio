@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
 import { GrMysql } from 'react-icons/gr';
-import { motion } from 'framer-motion';
 import Spotlight from './Spotlight';
 
 function MainGUI() {
@@ -21,11 +20,9 @@ function MainGUI() {
   // });
   return (
     <main className="bg-dark-animation flex flex-col">
-      <motion.div
-        className="relative flex grow flex-col items-center justify-evenly gap-8 p-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 1, ease: 'easeOut' }}
+      <div
+        className="opacity-animation flex grow flex-col items-center justify-evenly gap-8 p-8"
+        style={{ animationDelay: '0.5s' }}
       >
         {showHighlight && <Spotlight targetSelector="#socialLinks" onClose={() => setShowHighlight(false)} />}
         {/* Role, Name */}
@@ -163,7 +160,7 @@ function MainGUI() {
           </button> */}
           </div>
         </section>
-      </motion.div>
+      </div>
     </main>
   );
 }
