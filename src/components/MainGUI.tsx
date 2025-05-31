@@ -20,7 +20,7 @@ function MainGUI() {
   //   loop: true,
   // });
   return (
-    <main className="flex flex-col">
+    <main className="bg-dark-animation flex flex-col">
       <motion.div
         className="relative flex grow flex-col items-center justify-evenly gap-8 p-8"
         initial={{ opacity: 0 }}
