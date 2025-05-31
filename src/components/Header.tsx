@@ -16,8 +16,7 @@ const Header = ({ SkipButton }: { SkipButton: React.ReactNode | null }) => {
 
   return (
     <header className="flex h-14 items-center justify-between bg-neutral-900/60 px-8 py-1">
-      {/* Badraan */}
-      {/* <div className="text-2xl font-bold text-white">Badraan</div> */}
+      {/* Skip Button or Switch */}
       {SkipButton ? SkipButton : <Switch />}
 
       {/* Date & Time */}

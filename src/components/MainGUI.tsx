@@ -7,7 +7,8 @@ import { useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
 import { GrMysql } from 'react-icons/gr';
-import Spotlight from './Spotlight';
+import Spotlight from '@/components/Spotlight';
+import Attribution from '@/components/Attribution';
 
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
@@ -35,8 +36,6 @@ function MainGUI() {
             <strong>MERN Stack</strong> Developer with experience in <strong>Next.js</strong> and <strong>MySQL</strong>
             . Looking for opportunities to grow as a developer and contribute to solid teams. Also, I love{' '}
             <strong>cats!</strong> 😸
-            {/* <br /> */}
-            {/* Ready to transform your Mona Lisa into a functional eye-catching website?{' '} */}
           </p>
           <button
             className="rounded-2xl bg-emerald-600 px-4 py-2 hover:cursor-pointer hover:bg-emerald-500"
@@ -161,6 +160,7 @@ function MainGUI() {
           </div>
         </section>
       </div>
+      <Attribution />
     </main>
   );
 }

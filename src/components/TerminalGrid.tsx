@@ -62,7 +62,7 @@ const TerminalGrid = forwardRef(({ exiting = false, onExited }: { exiting: boole
   }));
 
   return (
-    <main className="fixed-height flex flex-col">
+    <main className="flex flex-col">
       <div className="grow" id="terminalGrid">
         {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
         <AnimatePresence

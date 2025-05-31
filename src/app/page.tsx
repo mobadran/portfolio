@@ -52,27 +52,13 @@ export default function Home() {
   }, [isTerminal.checked, currentScreen, terminalExiting]);
 
   return (
-    <div
-      // className={`flex min-h-screen flex-col transition-colors duration-600 ${currentScreen === 1 ? 'bg-black/80' : 'bg-black/0'}`}
-      className={`flex min-h-screen flex-col transition-colors duration-600`}
-    >
+    <div className={`flex min-h-screen flex-col transition-colors duration-600`}>
       <Header SkipButton={currentScreen === 0 ? <SkipButton setStopLoading={setStopLoading} /> : null} />
       {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
       {currentScreen === 1 && <MainGUI />}
       {currentScreen === 2 && (
         <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
       )}
-      {/* Attribution */}
-      <p className="mx-auto pb-2 text-center text-xs text-gray-500">
-        Photo by{' '}
-        <a href="https://unsplash.com/@betagamma?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
-          Daniil Silantev
-        </a>{' '}
-        on{' '}
-        <a href="https://unsplash.com/photos/mountains-are-silhouetted-against-a-vibrant-sunrise-6VhIHgqo5qI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">
-          Unsplash
-        </a>
-      </p>
     </div>
   );
 }
