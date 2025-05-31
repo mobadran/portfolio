@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import CommandBlock from './CommandBlock';
 import type { LoadingCommandBlockProps } from '@/types/loading';
+import { useScreen } from '@/context/ScreenContext';
+import { motion } from 'framer-motion';
 
 const COMMANDS = [
   {
@@ -25,11 +27,11 @@ const COMMANDS = [
   },
 ];
 
-export default function Loading({ unmount, stopLoading }: { unmount: () => void; stopLoading: boolean }) {
+export default function Loading() {
   const [currentOutput, setCurrentOutput] = useState<ReactNode>();
   const [terminalHistory, setTerminalHistory] = useState<LoadingCommandBlockProps[]>([]);
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
-  const [isExiting, setIsExiting] = useState(false);
+  const { setScreen } = useScreen();
 
   const buildSequence = () => {
     let outputSoFar: ReactNode = '';
@@ -75,79 +77,62 @@ export default function Loading({ unmount, stopLoading }: { unmount: () => void;
         setCurrentCommandIndex((prev) => prev + 1);
       } else {
         setCurrentCommandIndex(-1);
+        setScreen('gui');
       }
     });
 
     return seq;
   };
 
-  useEffect(() => {
-    if (currentCommandIndex === -1) {
-      const timerIsExiting = setTimeout(() => {
-        setIsExiting(true);
-      }, 400);
-      const timer = setTimeout(() => {
-        unmount();
-      }, 700);
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(timerIsExiting);
-      };
-    }
-  }, [currentCommandIndex, unmount]);
-
-  useEffect(() => {
-    if (stopLoading) {
-      setCurrentCommandIndex(-1);
-    }
-  }, [stopLoading]);
-
   return (
-    <main className="flex flex-col">
-      <div className="flex grow items-center justify-center">
-        <div
-          style={{ transformOrigin: '50% 50%' }}
-          className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text ${isExiting ? 'scale-0' : 'scale-100'}`}
-        >
-          {terminalHistory.map((commandBlock, index) => (
-            <CommandBlock
-              key={index}
-              commandLine={
-                <>
-                  <span className="text-green-400">
-                    ~<span className="text-white">&nbsp;👉</span>
-                  </span>{' '}
-                  <span>{commandBlock.command}</span>
-                </>
-              }
-              output={commandBlock.output}
-            />
-          ))}
-          {/* Prompt + Command Line */}
-          {currentCommandIndex !== -1 && (
-            <div className="flex items-start gap-2">
-              <span className="text-green-400">
-                ~<span className="text-white">&nbsp;👉</span>
-              </span>
-              <div className="grow break-all whitespace-pre-wrap">
-                {currentCommandIndex === -1 ? null : (
-                  <TypeAnimation
-                    key={currentCommandIndex}
-                    sequence={buildSequence()}
-                    wrapper="div"
-                    speed={60}
-                    cursor={true}
-                    repeat={0}
-                  />
-                )}
-              </div>
+    <motion.div
+      className="flex grow items-center justify-center"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+    >
+      <div
+        style={{ transformOrigin: '50% 50%' }}
+        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text`}
+      >
+        {terminalHistory.map((commandBlock, index) => (
+          <CommandBlock
+            key={index}
+            commandLine={
+              <>
+                <span className="text-green-400">
+                  ~<span className="text-white">&nbsp;👉</span>
+                </span>{' '}
+                <span>{commandBlock.command}</span>
+              </>
+            }
+            output={commandBlock.output}
+          />
+        ))}
+        {/* Prompt + Command Line */}
+        {currentCommandIndex !== -1 && (
+          <div className="flex items-start gap-2">
+            <span className="text-green-400">
+              ~<span className="text-white">&nbsp;👉</span>
+            </span>
+            <div className="grow break-all whitespace-pre-wrap">
+              {currentCommandIndex === -1 ? null : (
+                <TypeAnimation
+                  key={currentCommandIndex}
+                  sequence={buildSequence()}
+                  wrapper="div"
+                  speed={60}
+                  cursor={true}
+                  repeat={0}
+                />
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Current Output */}
-          <div className="break-words whitespace-pre-wrap">{currentOutput}</div>
-        </div>
+        {/* Current Output */}
+        <div className="break-words whitespace-pre-wrap">{currentOutput}</div>
       </div>
-    </main>
+    </motion.div>
   );
 }

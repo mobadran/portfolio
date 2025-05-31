@@ -5,18 +5,19 @@ import MainGUI from '@/components/MainGUI';
 import TerminalGrid from '@/components/TerminalGrid';
 import { useSwitch } from '@/context/SwitchContext';
 import { useEffect, useRef, useState } from 'react';
+import { useScreen } from '@/context/ScreenContext';
+import { AnimatePresence } from 'framer-motion';
 
 export default function Home() {
-  const [currentScreen, setCurrentScreen] = useState<0 | 1 | 2>(0);
+  const { screen, setScreen } = useScreen();
   const childRef = useRef<{
     childMethod: () => void;
     spawnTerminal?: () => void;
   }>(null);
   const [terminalExiting, setTerminalExiting] = useState(false);
   const isTerminal = useSwitch();
-  const [stopLoading, setStopLoading] = useState(false);
   function handleTerminalGridExited() {
-    setCurrentScreen(1);
+    setScreen('gui');
     setTerminalExiting(false);
   }
 
@@ -38,39 +39,29 @@ export default function Home() {
 
   // Handle entering terminal screen
   useEffect(() => {
-    if (currentScreen !== 0 && isTerminal.checked && currentScreen !== 2) {
-      setCurrentScreen(2);
+    if (screen !== 'loading' && isTerminal.checked && screen !== 'cli') {
+      setScreen('cli');
       setTerminalExiting(false);
     }
-  }, [isTerminal.checked, currentScreen]);
+  }, [isTerminal.checked, screen, setScreen]);
 
   // Handle exiting terminal screen
   useEffect(() => {
-    if (currentScreen === 2 && !isTerminal.checked && !terminalExiting) {
+    if (screen === 'cli' && !isTerminal.checked && !terminalExiting) {
       setTerminalExiting(true);
     }
-  }, [isTerminal.checked, currentScreen, terminalExiting]);
+  }, [isTerminal.checked, screen, terminalExiting]);
 
   return (
-    <div className={`flex min-h-screen flex-col transition-colors duration-600`}>
-      <Header SkipButton={currentScreen === 0 ? <SkipButton setStopLoading={setStopLoading} /> : null} />
-      {currentScreen === 0 && <Loading unmount={() => setCurrentScreen(1)} stopLoading={stopLoading} />}
-      {currentScreen === 1 && <MainGUI />}
-      {currentScreen === 2 && (
-        <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
-      )}
+    <div className="flex min-h-screen flex-col transition-colors duration-600">
+      <Header />
+      <main className="flex flex-col">
+        <AnimatePresence>{screen === 'loading' && <Loading />}</AnimatePresence>
+        {screen === 'gui' && <MainGUI />}
+        {screen === 'cli' && (
+          <TerminalGrid ref={childRef} exiting={terminalExiting} onExited={handleTerminalGridExited} />
+        )}
+      </main>
     </div>
-  );
-}
-
-function SkipButton({ setStopLoading }: { setStopLoading: (value: boolean) => void }) {
-  return (
-    <button
-      className="border-gradient-animated rounded-full bg-black/60 px-3 py-1 text-white transition hover:cursor-pointer hover:bg-black/80"
-      onClick={() => setStopLoading(true)}
-      type="button"
-    >
-      Skip
-    </button>
   );
 }
