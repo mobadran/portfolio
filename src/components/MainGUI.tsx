@@ -2,7 +2,7 @@ import { FaGithub, FaGlobe, FaReact } from 'react-icons/fa';
 import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider } from 'keen-slider/react.es'; // import from 'keen-slider/react.es' for to get an ES module
+import { useKeenSlider } from 'keen-slider/react.es';
 import { useEffect, useState } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import Image from 'next/image';
@@ -14,9 +14,18 @@ import { useScreen } from '@/context/ScreenContext';
 
 function MainGUI() {
   const [showHighlight, setShowHighlight] = useState(false);
-  const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
   const { setScreen } = useScreen();
   const [sliderRef, instanceRef] = useKeenSlider({ loop: true });
+  const [projects, setProjects] = useState([]);
+  useEffect(() => {
+    fetch('/projects.json')
+      .then((res) => res.json())
+      .then((data) => setProjects(data));
+  }, []);
+  useEffect(() => {
+    instanceRef.current?.update();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects]);
 
   // Switch to CLI
   useEffect(() => {
@@ -52,7 +61,7 @@ function MainGUI() {
             <strong>cats!</strong> 😸
           </p>
           <button
-            className="rounded-2xl bg-emerald-600 px-4 py-2 hover:cursor-pointer hover:bg-emerald-500"
+            className="rounded-2xl bg-emerald-600 px-4 py-2 text-emerald-50 transition-colors duration-250 hover:cursor-pointer hover:bg-emerald-500 hover:text-emerald-100"
             onClick={() => setShowHighlight(true)}
           >
             Contact Me!
@@ -103,107 +112,11 @@ function MainGUI() {
               <IoMdArrowDropleft />
             </button>
             <div ref={sliderRef} className="keen-slider bg-[#0d0d0d]/80 backdrop-blur-sm">
-              <div className="keen-slider__slide flex w-full flex-col justify-center">
-                <div className="flex flex-col items-center lg:flex-row">
-                  <div>
-                    <Image
-                      src="/portfolio-image.png"
-                      alt="Screenshot of my portfolio"
-                      width={1000}
-                      height={1000}
-                      className="w-64 rounded-r-lg object-cover shadow-lg sm:w-100 md:w-125"
-                      priority
-                    />
-                  </div>
-                  <div className="flex flex-col justify-between gap-4 p-4">
-                    <div className="flex justify-between">
-                      <div className="flex flex-col items-baseline gap-4 sm:flex-row">
-                        <h2 className="text-xl">My Portfolio</h2>
-                        {/* Technologies */}
-                        <ul className="flex gap-2">
-                          <li className="rounded bg-neutral-900 px-2 py-1 text-sm text-white">Next.js</li>
-                          <li className="rounded bg-cyan-900/40 px-2 py-1 text-sm text-cyan-300">TailwindCSS</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p>A Project that took 4 days to complete and showed my creativity and React skills.</p>
-                    {/* Links */}
-                    <div className="flex flex-wrap items-center gap-6 text-white/50">
-                      <a className="hover:text-white" href="https://github.com/mobadran/portfolio" target="_blank">
-                        <FaGithub />
-                      </a>
-                      <button
-                        className={`hover:cursor-pointer hover:text-white ${liveSitePortfolio && 'text-white hover:cursor-default'}`}
-                        onClick={() => {
-                          setLiveSitePortfolio(true);
-                        }}
-                      >
-                        {liveSitePortfolio ? (
-                          <TypeAnimation
-                            sequence={[
-                              'You are already here? 🤨',
-                              2000,
-                              'Anyways, Have Fun! 😅',
-                              3000,
-                              '',
-                              () => setLiveSitePortfolio(false),
-                            ]}
-                            cursor={false}
-                            speed={60}
-                          />
-                        ) : (
-                          <FaGlobe />
-                        )}
-                      </button>
-                      <span className="text-sm text-white/50">Leave a star in the repo if you like it! 🌟</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="keen-slider__slide flex w-full flex-col justify-center">
-                <div className="flex flex-col items-center lg:flex-row">
-                  <div>
-                    <Image
-                      src="/athar-image.png"
-                      alt="Athar Logo"
-                      width={1000}
-                      height={1000}
-                      className="w-64 rounded-r-lg object-cover shadow-lg sm:w-100 md:w-125"
-                      priority
-                    />
-                  </div>
-                  <div className="flex flex-col justify-between gap-4 p-4">
-                    <div className="flex justify-between">
-                      <div className="flex flex-col items-baseline gap-4 sm:flex-row">
-                        <h2 className="text-xl">Athar</h2>
-                        {/* Technologies */}
-                        <ul className="flex gap-2">
-                          <li className="rounded bg-cyan-900/40 px-2 py-1 text-sm text-sky-400">React Native</li>
-                          <li className="rounded bg-neutral-900 px-2 py-1 text-sm text-white">Expo</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p>
-                      I led a team of 5 students to create a mobile app for our school project. This project showed my
-                      fast learning ability since I had to learn React Native to create the Application
-                    </p>
-                    {/* Links */}
-                    <div className="flex flex-wrap items-center gap-6 text-white/50">
-                      <a
-                        className="hover:text-white"
-                        href="https://athar-server-production.up.railway.app"
-                        target="_blank"
-                      >
-                        <FaGlobe />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {projects.length > 0 ? (
+                projects.map((project, index) => <Project key={index} data={project} />)
+              ) : (
+                <p>No projects found</p>
+              )}
             </div>
             <button
               onClick={() => instanceRef.current?.next()}
@@ -217,6 +130,107 @@ function MainGUI() {
       </div>
       <Attribution />
     </motion.div>
+  );
+}
+
+function Project({
+  data,
+}: {
+  data: {
+    image: string;
+    name: string;
+    description: string;
+    technologies: string[];
+    liveSite?: string;
+    github?: string;
+  };
+}) {
+  const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
+  const techTags = [
+    { name: 'TypeScript', bg: '#3178C6', text: '#FFFFFF' },
+    { name: 'React', bg: '#61DAFB', text: '#000000' },
+    { name: 'Next.js', bg: '#000000', text: '#FFFFFF' },
+    { name: 'Express', bg: '#000000', text: '#FFFFFF' },
+    { name: 'MongoDB', bg: '#47A248', text: '#FFFFFF' },
+    { name: 'Tailwind CSS', bg: '#06B6D4', text: '#FFFFFF' },
+    { name: 'React Native', bg: '#61DAFB', text: '#000000' },
+    { name: 'Expo', bg: '#000020', text: '#FFFFFF' },
+  ];
+
+  return (
+    <div className="keen-slider__slide flex w-full flex-col justify-center">
+      <div className="flex flex-col items-stretch lg:flex-row">
+        <div className="relative h-50 max-h-full w-50 flex-shrink-0">
+          <Image src={data.image} alt={data.name} fill className="max-h-full rounded-r-lg object-contain shadow-lg" />
+        </div>
+        <div className="flex grow flex-col justify-between gap-4 p-4">
+          <div className="flex justify-between">
+            <div className="flex flex-col items-baseline gap-4 sm:flex-row">
+              <h2 className="text-xl">{data.name}</h2>
+              {/* Technologies */}
+              <ul className="flex gap-2">
+                {data.technologies.map((technology, index) => {
+                  const tech = techTags.find((tag) => tag.name === technology);
+                  console.log(tech);
+                  return (
+                    <li
+                      key={index}
+                      className="rounded px-2 py-1 text-sm"
+                      style={{ backgroundColor: tech?.bg, color: tech?.text }}
+                    >
+                      {technology}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p>{data.description}</p>
+          {/* Links */}
+          <div className="flex flex-wrap items-center gap-6 text-white/50">
+            {data.github && (
+              <a className="hover:text-white" href={data.github} target="_blank" rel="noopener noreferrer">
+                <FaGithub />
+              </a>
+            )}
+            {data.liveSite &&
+              (data.liveSite === 'portfolio' ? (
+                <button
+                  className={`hover:cursor-pointer hover:text-white ${liveSitePortfolio && 'text-white hover:cursor-default'}`}
+                  onClick={() => {
+                    setLiveSitePortfolio(true);
+                  }}
+                  aria-label="Live site portfolio button"
+                >
+                  {liveSitePortfolio ? (
+                    <TypeAnimation
+                      sequence={[
+                        'You are already here? 🤨',
+                        2000,
+                        'Anyways, Have Fun! 😅',
+                        3000,
+                        '',
+                        () => setLiveSitePortfolio(false),
+                      ]}
+                      cursor={false}
+                      speed={60}
+                    />
+                  ) : (
+                    <FaGlobe />
+                  )}
+                </button>
+              ) : (
+                <a className="hover:text-white" href={data.liveSite} target="_blank" rel="noopener noreferrer">
+                  <FaGlobe />
+                </a>
+              ))}
+            {data.github && <p className="w-full text-sm text-white/50">Leave a star in the repo if you like it! 🌟</p>}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

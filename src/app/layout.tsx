@@ -1,4 +1,3 @@
-import { SwitchProvider } from '@/context/SwitchProvider';
 import './globals.css';
 import { ScreenProvider } from '@/context/ScreenContext';
 
@@ -21,9 +20,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <ScreenProvider>
-          <SwitchProvider>{children}</SwitchProvider>
-        </ScreenProvider>
+        <ScreenProvider>{children}</ScreenProvider>
       </body>
     </html>
   );
