@@ -85,15 +85,13 @@ export default function Loading() {
   };
 
   return (
-    <motion.div
-      className="flex grow items-center justify-center"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      exit={{ scale: 0 }}
-    >
-      <div
+    <div className="flex grow items-center justify-center">
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0 }}
         style={{ transformOrigin: '50% 50%' }}
-        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-all duration-300 hover:cursor-text`}
+        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 hover:cursor-text`}
       >
         {terminalHistory.map((commandBlock, index) => (
           <CommandBlock
@@ -132,7 +130,7 @@ export default function Loading() {
 
         {/* Current Output */}
         <div className="break-words whitespace-pre-wrap">{currentOutput}</div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
