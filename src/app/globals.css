@@ -59,7 +59,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../../public/wallpaper.jpg');
+  background-image: url('../../public/wallpaper.webp');
   background-size: cover;
   background-position: center;
   background-color: rgba(0, 0, 0, 0.3);

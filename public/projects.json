@@ -1,6 +1,6 @@
 [
   {
-    "image": "/portfolio-image.png",
+    "image": "/portfolio-image.webp",
     "name": "My Portfolio",
     "description": "My personal portfolio website built with Next.js and Tailwind CSS.",
     "technologies": ["Next.js", "Tailwind CSS", "TypeScript"],
@@ -8,7 +8,7 @@
     "github": "https://github.com/mobadran/portfolio"
   },
   {
-    "image": "/athar-image.png",
+    "image": "/athar-image.webp",
     "name": "Athar",
     "description": "I led a team of 5 students to create a mobile app for our school project. This project showed my fast learning ability since I had to learn React Native to create the Application.",
     "technologies": ["React Native", "Expo"],
