@@ -1,14 +1,19 @@
-import { useScreen } from '@/context/ScreenContext';
+import { usePathname, useRouter } from 'next/navigation';
 import { FaHome, FaTerminal } from 'react-icons/fa';
 
 function Switch() {
-  const { screen, setScreen } = useScreen();
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <div className="flex items-center">
       <label htmlFor="hs-large-soft-switch-with-icons" className="relative inline-block h-8 w-15 cursor-pointer">
         <input
-          checked={screen === 'cli'}
-          onChange={(e) => setScreen(e.target.checked ? 'cli' : 'gui')}
+          checked={pathname === '/cli'}
+          onChange={(e) => {
+            if (e.target.checked) router.push('/cli');
+            else router.push('/gui');
+          }}
           type="checkbox"
           id="hs-large-soft-switch-with-icons"
           className="peer sr-only"

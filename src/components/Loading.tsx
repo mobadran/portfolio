@@ -1,10 +1,10 @@
+'use client';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import CommandBlock from './CommandBlock';
 import type { LoadingCommandBlockProps } from '@/types/loading';
-import { useScreen } from '@/context/ScreenContext';
-import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const COMMANDS = [
   {
@@ -31,7 +31,8 @@ export default function Loading() {
   const [currentOutput, setCurrentOutput] = useState<ReactNode>();
   const [terminalHistory, setTerminalHistory] = useState<LoadingCommandBlockProps[]>([]);
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
-  const { setScreen } = useScreen();
+  const [exiting, setIsExiting] = useState(false);
+  const router = useRouter();
 
   const buildSequence = () => {
     let outputSoFar: ReactNode = '';
@@ -77,7 +78,10 @@ export default function Loading() {
         setCurrentCommandIndex((prev) => prev + 1);
       } else {
         setCurrentCommandIndex(-1);
-        setScreen('gui');
+        setIsExiting(true);
+        setTimeout(() => {
+          router.push('/gui');
+        }, 300);
       }
     });
 
@@ -86,12 +90,9 @@ export default function Loading() {
 
   return (
     <div className="flex grow items-center justify-center">
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        exit={{ scale: 0 }}
-        style={{ transformOrigin: '50% 50%' }}
-        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 hover:cursor-text`}
+      <div
+        className={`m-2 h-120 w-180 overflow-auto rounded-md border-2 border-gray-700 bg-black/60 p-3 font-mono text-sm shadow ring-2 ring-blue-400 transition-transform duration-300 hover:cursor-text ${exiting ? 'scale-0' : ''}`}
+        id="loadingTerminal"
       >
         {terminalHistory.map((commandBlock, index) => (
           <CommandBlock
@@ -130,7 +131,7 @@ export default function Loading() {
 
         {/* Current Output */}
         <div className="break-words whitespace-pre-wrap">{currentOutput}</div>
-      </motion.div>
+      </div>
     </div>
   );
 }

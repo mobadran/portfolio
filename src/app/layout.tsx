@@ -1,5 +1,4 @@
 import './globals.css';
-import { ScreenProvider } from '@/context/ScreenContext';
 
 export const metadata = {
   title: "Badraan's Land",
@@ -14,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <ScreenProvider>{children}</ScreenProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
