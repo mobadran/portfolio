@@ -7,7 +7,6 @@ import { initVFS } from '@/lib/vfs';
 import type { Directory } from '@/types/vfs';
 import Modal from '@/components/Modal';
 import { AnimatePresence } from 'framer-motion';
-import { useScreen } from '@/context/ScreenContext';
 
 const TerminalGrid = () => {
   const nextId = useRef(1);
@@ -16,7 +15,6 @@ const TerminalGrid = () => {
   const [warningMessage, setWarningMessage] = useState('');
   const [vfs, setVfs] = useState<Directory | null>(null);
   const [history, setHistory] = useLocalStorage<string[]>('history', []);
-  const { setScreen } = useScreen();
 
   function showWarning(message: string) {
     setWarningMessage(message);
@@ -72,15 +70,6 @@ const TerminalGrid = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [spawnTerminal, terminalIds, destroyTerminal]);
-
-  // Switch to GUI after all terminals are destroyed
-  useEffect(() => {
-    if (terminalIds.length === 0) {
-      setTimeout(() => {
-        setScreen('gui');
-      }, 200);
-    }
-  }, [terminalIds, setScreen]);
 
   return (
     <div className="grow" id="terminalGrid">
