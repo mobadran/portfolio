@@ -1,9 +1,28 @@
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { FaHome, FaTerminal } from 'react-icons/fa';
 
 function Switch() {
   const router = useRouter();
   const pathname = usePathname();
+
+  // ALT + S Event Listener
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 's' && event.altKey) {
+        event.preventDefault();
+        if (pathname === '/cli') {
+          router.push('/');
+        } else {
+          router.push('/cli');
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [pathname, router]);
 
   return (
     <div className="flex items-center">
@@ -12,7 +31,7 @@ function Switch() {
           checked={pathname === '/cli'}
           onChange={(e) => {
             if (e.target.checked) router.push('/cli');
-            else router.push('/gui');
+            else router.push('/');
           }}
           type="checkbox"
           id="hs-large-soft-switch-with-icons"

@@ -39,6 +39,10 @@ const TerminalGrid = () => {
 
   const destroyTerminal = useCallback(
     (id: number) => {
+      if (terminalIds.length === 1) {
+        showWarning('Cannot close last terminal');
+        return;
+      }
       // Focus on next terminal if possible, otherwise focus on previous terminal
       const nextTerminal = terminalIds[terminalIds.indexOf(id) + 1];
       if (nextTerminal) {
@@ -72,22 +76,24 @@ const TerminalGrid = () => {
   }, [spawnTerminal, terminalIds, destroyTerminal]);
 
   return (
-    <div className="grow" id="terminalGrid">
+    <>
       {warningShown && <Modal message={warningMessage} onClose={() => setWarningShown(false)} />}
-      <AnimatePresence>
-        {terminalIds.map((id) => (
-          <Terminal
-            key={id}
-            id={id}
-            vfs={vfs}
-            setVfs={setVfs}
-            history={history}
-            setHistory={setHistory}
-            onDestroy={destroyTerminal}
-          />
-        ))}
-      </AnimatePresence>
-    </div>
+      <div className="grow" id="terminalGrid">
+        <AnimatePresence>
+          {terminalIds.map((id) => (
+            <Terminal
+              key={id}
+              id={id}
+              vfs={vfs}
+              setVfs={setVfs}
+              history={history}
+              setHistory={setHistory}
+              onDestroy={destroyTerminal}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

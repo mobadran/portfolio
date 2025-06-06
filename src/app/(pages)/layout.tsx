@@ -1,4 +1,3 @@
-import { ClientWrapper } from '@/components/ClientWrapper';
 import Header from '@/components/Header';
 
 export default function RootLayout({
@@ -9,10 +8,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClientWrapper>
+        <main className="flex min-h-screen flex-col transition-colors duration-600">
           <Header showSwitch={true} />
           {children}
-        </ClientWrapper>
+        </main>
       </body>
     </html>
   );

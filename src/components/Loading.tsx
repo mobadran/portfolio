@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import CommandBlock from './CommandBlock';
 import type { LoadingCommandBlockProps } from '@/types/loading';
-import { useRouter } from 'next/navigation';
+import { useLoading } from '@/context/LoadingContext';
 
 const COMMANDS = [
   {
@@ -28,11 +28,11 @@ const COMMANDS = [
 ];
 
 export default function Loading() {
+  const { setShouldBeLoading } = useLoading();
   const [currentOutput, setCurrentOutput] = useState<ReactNode>();
   const [terminalHistory, setTerminalHistory] = useState<LoadingCommandBlockProps[]>([]);
   const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
   const [exiting, setIsExiting] = useState(false);
-  const router = useRouter();
 
   const buildSequence = () => {
     let outputSoFar: ReactNode = '';
@@ -80,7 +80,7 @@ export default function Loading() {
         setCurrentCommandIndex(-1);
         setIsExiting(true);
         setTimeout(() => {
-          router.push('/gui');
+          setShouldBeLoading(false);
         }, 300);
       }
     });
