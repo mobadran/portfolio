@@ -1,5 +1,3 @@
-'use client';
-
 import TerminalGrid from '@/components/TerminalGrid';
 
 const cli = () => {

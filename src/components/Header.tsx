@@ -5,7 +5,7 @@ import { IoMdMail } from 'react-icons/io';
 import { PiReadCvLogoBold } from 'react-icons/pi';
 import Switch from '@/components/Switch';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useLoading } from '@/context/LoadingContext';
 
 const Header = ({ showSwitch }: { showSwitch: boolean }) => {
   const date = useClock();
@@ -64,11 +64,11 @@ const Header = ({ showSwitch }: { showSwitch: boolean }) => {
 };
 
 function SkipButton() {
-  const router = useRouter();
+  const { setShouldBeLoading } = useLoading();
   return (
     <button
       className="border-gradient-animated rounded-full bg-black/60 px-3 py-1 text-white transition hover:cursor-pointer hover:bg-black/80"
-      onClick={() => router.push('/gui')}
+      onClick={() => setShouldBeLoading(false)}
       type="button"
     >
       Skip
