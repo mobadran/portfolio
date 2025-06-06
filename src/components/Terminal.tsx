@@ -7,37 +7,6 @@ import type { ReactNode } from 'react';
 import type { CommandBlockProps, TerminalProps } from '@/types/terminal';
 import CommandBlock from './CommandBlock';
 
-// const initialCompletionState: CompletionState = {
-//   baseWord: '',
-//   matches: [],
-//   index: 0,
-// };
-
-// function completionReducer(state: CompletionState, action: Action): CompletionState {
-//   switch (action.type) {
-//     case 'START_CYCLE':
-//       action.function(action.matches[state.index]);
-//       return {
-//         ...state,
-//         baseWord: action.baseWord,
-//         matches: action.matches,
-//         index: 1,
-//       };
-//     case 'NEXT_MATCH':
-//       if (state.index >= state.matches.length) {
-//         action.function(state.baseWord); // Reset to base word if no matches left
-//         return { ...state, index: 0 };
-//       }
-//       action.function(state.matches[state.index]);
-//       return {
-//         ...state,
-//         index: state.index + 1,
-//       };
-//     default:
-//       return state;
-//   }
-// }
-
 function Terminal({ vfs, id, setVfs, history, setHistory, onDestroy }: TerminalProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasRunHelp = useRef(false);
@@ -46,7 +15,7 @@ function Terminal({ vfs, id, setVfs, history, setHistory, onDestroy }: TerminalP
   const [terminalHistory, setTerminalHistory] = useState<CommandBlockProps[]>([]);
   const [currentPath, setCurrentPath] = useState<string[]>(['/', 'home', 'badraan']);
   const [currentSelectedHistoryIndex, setCurrentSelectedHistoryIndex] = useState(0);
-  // const [completion, dispatch] = useReducer(completionReducer, initialCompletionState);
+
   const [prompt, setPrompt] = useState(
     <>
       ~<span className="text-white">&nbsp;👉</span>

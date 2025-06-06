@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface LoadingContextType {
   shouldBeLoading: boolean;
@@ -8,13 +8,18 @@ interface LoadingContextType {
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
 export const LoadingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Initialize with a consistent value for SSR and initial client render
   const [shouldBeLoading, setShouldBeLoading] = useState(true);
 
-  return (
-    <LoadingContext.Provider value={{ shouldBeLoading, setShouldBeLoading }}>
-      {children}
-    </LoadingContext.Provider>
-  );
+  useEffect(() => {
+    // This effect runs only on the client after hydration
+    const hasLoadedInSession = sessionStorage.getItem('hasLoadedInSession');
+    if (hasLoadedInSession === 'true') {
+      setShouldBeLoading(false); // Update state based on sessionStorage
+    }
+  }, []); // Empty dependency array ensures it runs once on mount
+
+  return <LoadingContext.Provider value={{ shouldBeLoading, setShouldBeLoading }}>{children}</LoadingContext.Provider>;
 };
 
 export const useLoading = (): LoadingContextType => {
