@@ -1,7 +1,5 @@
 import TerminalGrid from '@/components/TerminalGrid';
 
-const cli = () => {
+export default function Cli() {
   return <TerminalGrid />;
-};
-
-export default cli;
+}

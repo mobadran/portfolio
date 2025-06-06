@@ -7,6 +7,7 @@ import { initVFS } from '@/lib/vfs';
 import type { Directory } from '@/types/vfs';
 import Modal from '@/components/Modal';
 import { AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const TerminalGrid = () => {
   const nextId = useRef(1);
@@ -15,6 +16,7 @@ const TerminalGrid = () => {
   const [warningMessage, setWarningMessage] = useState('');
   const [vfs, setVfs] = useState<Directory | null>(null);
   const [history, setHistory] = useLocalStorage<string[]>('history', []);
+  const router = useRouter();
 
   function showWarning(message: string) {
     setWarningMessage(message);
@@ -40,8 +42,7 @@ const TerminalGrid = () => {
   const destroyTerminal = useCallback(
     (id: number) => {
       if (terminalIds.length === 1) {
-        showWarning('Cannot close last terminal');
-        return;
+        router.push('/');
       }
       // Focus on next terminal if possible, otherwise focus on previous terminal
       const nextTerminal = terminalIds[terminalIds.indexOf(id) + 1];
@@ -55,7 +56,7 @@ const TerminalGrid = () => {
       }
       setTerminalIds((prev) => prev.filter((i) => i !== id));
     },
-    [terminalIds, setTerminalIds]
+    [terminalIds, setTerminalIds, router]
   );
 
   // Spawn Terminal on ALT+T
