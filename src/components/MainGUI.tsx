@@ -1,4 +1,3 @@
-'use client';
 import { FaReact } from 'react-icons/fa';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
