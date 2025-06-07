@@ -48,11 +48,11 @@ export function getCommands(context: {
       ),
     whoami: (args: string[]) => {
       if (args.length) return <p>Invalid whoami command. Usage: whoami</p>;
-      <p>badraan</p>;
+      return <p>badraan</p>;
     },
     date: (args: string[]) => {
       if (args.length) return <p>Invalid date command. Usage: date</p>;
-      <p>{new Date().toLocaleString()}</p>;
+      return <p>{new Date().toLocaleString()}</p>;
     },
     ls: (args: string[]) => {
       const output = ls(vfs, currentPath, args[0]);
@@ -131,9 +131,6 @@ export function getCommands(context: {
           </li>
           <li>
             <code>pwd</code>: Print working directory
-          </li>
-          <li>
-            <code>uname</code>: Show system information
           </li>
           <li>
             <code>ls [directory]</code>: List files and directories

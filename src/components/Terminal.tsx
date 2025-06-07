@@ -79,28 +79,6 @@ function Terminal({ vfs, id, setVfs, history, setHistory, onDestroy }: TerminalP
     [addToHistory, currentPath, handleCommand, setInputValue, setTerminalHistory]
   );
 
-  // function handleTabCompletion() {
-  //   const words = inputValue.split(' ');
-  //   const baseWord = words[words.length - 1];
-  //   const isCommand = words.length === 1 && inputValue[inputValue.length - 1] !== ' ';
-  //   const candidates = isCommand ? Object.keys(commands) : ls(vfs, currentPath)?.map((item) => item.content);
-  //   if (!candidates) return;
-  //   const matches = candidates.filter((cmd) => cmd.startsWith(baseWord));
-  //   if (completion.index === 0) {
-  //     dispatch({
-  //       type: 'START_CYCLE',
-  //       baseWord,
-  //       matches,
-  //       function: setInputValue,
-  //     });
-  //   } else {
-  //     dispatch({
-  //       type: 'NEXT_MATCH',
-  //       function: (string) => setInputValue(words.slice(0, -1).join(' ') + ' ' + string),
-  //     });
-  //   }
-  // }
-
   useEffect(() => {
     inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     setPrompt(
