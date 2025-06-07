@@ -3,7 +3,7 @@
     "image": "/athar-image.webp",
     "name": "Athar",
     "description": "I led a team of 5 students to create a mobile app for our school project. This project showed my fast learning ability since I had to learn React Native to create the Application.",
-    "technologies": ["React Native", "Expo"],
+    "technologies": ["React Native", "Expo", "Express", "MongoDB"],
     "liveSite": "https://athar-server-production.up.railway.app"
   },
   {
