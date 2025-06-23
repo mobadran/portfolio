@@ -3,7 +3,7 @@ import { ProjectData } from '@/types/project';
 import { IoMdArrowDropleft, IoMdArrowDropright } from 'react-icons/io';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FaGithub, FaGlobe } from 'react-icons/fa';
 import { TypeAnimation } from 'react-type-animation';
@@ -20,6 +20,13 @@ function ProjectSlider({ projects }: { projects: ProjectData[] }) {
       setLoaded(true);
     },
   });
+
+  // To solve the issue of the slider's width being the old width (before the loaded state is set to true)
+  useEffect(() => {
+    if (loaded && instanceRef.current) {
+      instanceRef.current.update(); // Force recalculation
+    }
+  }, [loaded, instanceRef]);
 
   return (
     <div className="flex items-stretch">
