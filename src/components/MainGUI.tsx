@@ -3,8 +3,9 @@ import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si'
 import { GrMysql } from 'react-icons/gr';
 import Attribution from '@/components/Attribution';
 import ProjectSlider from '@/components/ProjectSlider';
-import { SpotlightButton } from './SpotlightButton';
+// import { SpotlightButton } from './SpotlightButton';
 import projects from '@/data/projects.json';
+import ContactButton from '@/components/ContactButton';
 
 function MainGUI() {
   return (
@@ -21,7 +22,8 @@ function MainGUI() {
             . Looking for opportunities to grow as a developer and contribute to solid teams. Also, I love{' '}
             <strong>cats!</strong> 😸
           </p>
-          <SpotlightButton />
+          {/* <SpotlightButton /> */}
+          <ContactButton />
         </section>
 
         <hr />
