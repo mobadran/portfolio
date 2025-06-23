@@ -1,13 +1,30 @@
+'use client';
+import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
 import Attribution from '@/components/Attribution';
 import ProjectSlider from '@/components/ProjectSlider';
-// import { SpotlightButton } from './SpotlightButton';
-import projects from '@/data/projects.json';
+// import projects from '@/data/projects.json';
 import ContactButton from '@/components/ContactButton';
+import { getProjects, urlFor } from '@/lib/sanity';
+import { ProjectData, ProjectDataWithImageObject } from '@/types/project';
 
 function MainGUI() {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const projects = await getProjects();
+      setProjects(
+        projects.map((project: ProjectDataWithImageObject) => ({
+          ...project,
+          image: urlFor(project.image).url(),
+          description: project.description[0].children[0].text,
+        }))
+      );
+    };
+    fetchProjects();
+  }, []);
   return (
     <div className="flex grow flex-col" id="mainGUI">
       <div className="flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0">
