@@ -139,17 +139,17 @@ function Project({ data }: { data: ProjectData }) {
                       ]}
                       cursor={false}
                       speed={60}
+                      className="mb-0"
                     />
                   ) : (
-                    <FaGlobe />
+                    <FaGlobe className="inline h-4 w-4 align-text-bottom" />
                   )}
                 </button>
               ) : (
                 <a className="hover:text-white" href={data.liveSite} target="_blank" rel="noopener noreferrer">
-                  <FaGlobe />
+                  <FaGlobe className="inline h-4 w-4 align-text-bottom" />
                 </a>
               ))}
-            {data.github && <p className="w-full text-sm text-white/50">Leave a star in the repo if you like it! 🌟</p>}
           </div>
         </div>
       </div>
