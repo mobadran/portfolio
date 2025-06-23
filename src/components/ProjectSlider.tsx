@@ -64,16 +64,6 @@ function ProjectSlider({ projects }: { projects: ProjectData[] }) {
 
 function Project({ data }: { data: ProjectData }) {
   const [liveSitePortfolio, setLiveSitePortfolio] = useState(false);
-  const techTags = [
-    { name: 'TypeScript', bg: '#3178C6', text: '#FFFFFF' },
-    { name: 'React', bg: '#61DAFB', text: '#000000' },
-    { name: 'Next.js', bg: '#000000', text: '#FFFFFF' },
-    { name: 'Express', bg: '#000000', text: '#FFFFFF' },
-    { name: 'MongoDB', bg: '#47A248', text: '#FFFFFF' },
-    { name: 'Tailwind CSS', bg: '#06B6D4', text: '#FFFFFF' },
-    { name: 'React Native', bg: '#61DAFB', text: '#000000' },
-    { name: 'Expo', bg: '#000020', text: '#FFFFFF' },
-  ];
 
   return (
     <div className="keen-slider__slide p-4">
@@ -89,18 +79,13 @@ function Project({ data }: { data: ProjectData }) {
         </div>
         <div className="flex grow flex-col justify-between gap-4">
           <div className="flex justify-between">
-            <div className="flex flex-col items-baseline gap-4 sm:flex-row">
-              <h2 className="text-xl">{data.name}</h2>
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <h2 className="text-2xl">{data.name}</h2>
               {/* Technologies */}
               <ul className="flex flex-wrap gap-2">
                 {data.technologies.map((technology, index) => {
-                  const tech = techTags.find((tag) => tag.name === technology);
                   return (
-                    <li
-                      key={index}
-                      className="rounded px-2 py-1 text-sm"
-                      style={{ backgroundColor: tech?.bg, color: tech?.text }}
-                    >
+                    <li key={index} className="rounded bg-stone-900 px-2 py-1 text-sm">
                       {technology}
                     </li>
                   );
