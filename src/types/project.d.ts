@@ -6,10 +6,3 @@ export type ProjectData = {
   liveSite?: string;
   github?: string;
 };
-
-export type ProjectDataWithImageObject = Omit<ProjectData, 'image'> & {
-  image: {
-    url: string;
-  };
-  description: array;
-};

@@ -1,30 +1,12 @@
-'use client';
-import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import { SiExpress, SiMongodb, SiNextdotjs, SiTypescript } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
 import Attribution from '@/components/Attribution';
 import ProjectSlider from '@/components/ProjectSlider';
-// import projects from '@/data/projects.json';
 import ContactButton from '@/components/ContactButton';
-import { getProjects, urlFor } from '@/lib/sanity';
-import { ProjectData, ProjectDataWithImageObject } from '@/types/project';
+import { ProjectData } from '@/types/project';
 
-function MainGUI() {
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const projects = await getProjects();
-      setProjects(
-        projects.map((project: ProjectDataWithImageObject) => ({
-          ...project,
-          image: urlFor(project.image).url(),
-          description: project.description[0].children[0].text,
-        }))
-      );
-    };
-    fetchProjects();
-  }, []);
+function MainGUI({ projects }: { projects: ProjectData[] | null }) {
   return (
     <div className="flex grow flex-col" id="mainGUI">
       <div className="flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0">
@@ -78,7 +60,7 @@ function MainGUI() {
 
         {/* Projects */}
         <section className="w-full lg:max-w-200">
-          <ProjectSlider projects={projects} />
+          <ProjectSlider projects={projects || []} />
         </section>
       </div>
       <Attribution />

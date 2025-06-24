@@ -28,7 +28,6 @@ function ProjectSlider({ projects }: { projects: ProjectData[] }) {
         }}
         spaceBetween={16}
         slidesPerView={1}
-        loop={true}
       >
         {projects.length > 0 ? (
           projects.map((project, index) => (
