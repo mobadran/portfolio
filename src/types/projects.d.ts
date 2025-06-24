@@ -6,8 +6,3 @@ export type Project = {
   liveSite: string;
   github: string;
 };
-
-declare module '@/data/projects.json' {
-  const value: Project[];
-  export default value;
-}

@@ -7,7 +7,7 @@ import Switch from '@/components/Switch';
 import { useEffect, useState } from 'react';
 import { useLoading } from '@/context/LoadingContext';
 
-const Header = ({ showSwitch }: { showSwitch: boolean }) => {
+const Header = ({ showSwitch, content }: { showSwitch: boolean; content: ContentType['header'] | null }) => {
   const date = useClock();
   const [mounted, setMounted] = useState(false);
 
@@ -39,22 +39,22 @@ const Header = ({ showSwitch }: { showSwitch: boolean }) => {
       {/* Social Links */}
       <ul className="flex gap-5 text-xl text-white/40" id="socialLinks">
         <li className="transition-colors duration-200 hover:text-white" title="Github">
-          <a target="_blank" href="https://github.com/mobadran" aria-label="github">
+          <a target="_blank" href={content?.github} aria-label="github">
             <FaGithub />
           </a>
         </li>
         <li className="transition-colors duration-200 hover:text-white" title="Linkedin">
-          <a target="_blank" href="https://linkedin.com/in/badraan" aria-label="linkedin">
+          <a target="_blank" href={content?.linkedin} aria-label="linkedin">
             <FaLinkedin />
           </a>
         </li>
         <li className="transition-colors duration-200 hover:text-white" title="Email">
-          <a target="_blank" href="mailto:badraanmo@gmail.com" aria-label="email">
+          <a target="_blank" href={'mailto:' + content?.email} aria-label="email">
             <IoMdMail />
           </a>
         </li>
         <li className="transition-colors duration-200 hover:text-white" title="Resume">
-          <a target="_blank" href="resume.pdf" aria-label="resume">
+          <a target="_blank" href={content?.resume} aria-label="resume">
             <PiReadCvLogoBold />
           </a>
         </li>
