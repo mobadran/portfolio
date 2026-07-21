@@ -29,15 +29,6 @@
                 }
               }
             },
-            "documents": {
-              "type": "dir",
-              "children": {
-                "resume.pdf": {
-                  "type": "file",
-                  "content": "/resume.pdf"
-                }
-              }
-            },
             "downloads": {
               "type": "dir",
               "children": {

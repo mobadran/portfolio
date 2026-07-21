@@ -4,7 +4,7 @@ import { PiReadCvLogoBold } from 'react-icons/pi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { IoMdMail } from 'react-icons/io';
 
-const ContactButton = () => {
+const ContactButton = ({ content }: { content: ContentType['header'] }) => {
   const [warningShown, setWarningShown] = useState(false);
   return (
     <>
@@ -46,7 +46,7 @@ const ContactButton = () => {
                 </a>
               </li>
               <li className="transition-colors duration-200 hover:text-white" title="Resume">
-                <a className="flex items-center gap-2" target="_blank" href="resume.pdf" aria-label="resume">
+                <a className="flex items-center gap-2" target="_blank" href={content.resume} aria-label="resume">
                   <PiReadCvLogoBold />
                   <b>resume</b>
                 </a>

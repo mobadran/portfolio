@@ -32,7 +32,7 @@ function HomeContent() {
     <CmsContentProvider value={cmsContent}>
       <div className="flex h-screen flex-col">
         <Header showSwitch={true} content={cmsContent?.header || null} />
-        {isClient && <MainGUI projects={cmsContent?.projects || null} />}
+        {isClient && <MainGUI content={cmsContent?.header || null} projects={cmsContent?.projects || null} />}
       </div>
     </CmsContentProvider>
   );

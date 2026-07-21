@@ -6,7 +6,7 @@ import ProjectSlider from '@/components/ProjectSlider';
 import ContactButton from '@/components/ContactButton';
 import { ProjectData } from '@/types/project';
 
-function MainGUI({ projects }: { projects: ProjectData[] | null }) {
+function MainGUI({ content, projects }: { content: ContentType['header'], projects: ProjectData[] | null }) {
   return (
     <div className="flex grow flex-col" id="mainGUI">
       <div className="flex grow flex-col items-center justify-evenly gap-8 p-8 pb-0">
@@ -22,7 +22,7 @@ function MainGUI({ projects }: { projects: ProjectData[] | null }) {
             <strong>cats!</strong> 😸
           </p>
           {/* <SpotlightButton /> */}
-          <ContactButton />
+          <ContactButton content={content} />
         </section>
 
         <hr />
