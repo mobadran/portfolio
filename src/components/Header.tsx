@@ -15,7 +15,7 @@ const Header = ({ showSwitch = true, content }: { showSwitch?: boolean; content:
   }, []);
 
   return (
-    <header className="flex h-14 items-center justify-between bg-neutral-900/60 px-8 py-1">
+    <header className="flex h-14 items-center justify-between bg-neutral-900/60 px-8 py-4">
       {/* Switch */}
       {showSwitch && <Switch />}
 
